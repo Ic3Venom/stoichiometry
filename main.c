@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct ELEMENT{
+    short   number;
+    char    symbol[3];
+    float   mass;
+    char    name[13];
+};
+
 //From 'ultimatetypingtest.cpp'
 int stringToInt(char character)
 {
@@ -19,12 +26,43 @@ int stringToInt(char character)
     }
 }
 
+float elementFind(char* chemical, int amount)
+{
+    FILE *file;
+    struct ELEMENT element;
+    char fileName[] = "periodictable.txt";
+    char *fileMode = "r";
+
+    file = fopen(fileName, fileMode);
+
+    if (file == NULL)
+    {
+        printf("Unable to find file %s", fileName);
+    }
+
+    while(fscanf(file, "%d %s %f %s", &(element.number), element.symbol, &(element.mass), element.name) != EOF)
+    {
+        if (strcmp(element.name, chemical) == 0)
+        {
+            break;
+        }
+    }
+
+    if (strcmp(element.name, chemical ) != 0)
+    {
+        printf("Unable to find the element %s in periodictable.txt! Exiting program", element.name);
+        exit(-1);
+    }
+
+    return element.mass * amount;
+}
+
 int main()
 {
     char input[100];
 
-    scanf("%s", input);
-    printf("%s", input);
+    float mass = elementFind("Hydrogen", 2);
 
+    printf("%f", mass);
     return 0;
 }
