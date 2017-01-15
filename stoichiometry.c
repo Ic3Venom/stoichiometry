@@ -1,7 +1,7 @@
 /*
 ** File: stoichiometry.c
 ** Calculates some basic numbers from an equation and amounts of chemicals
-** Created by Julian Meyn, 
+** Created by Julian Meyn, 12.1.2017
 */
 
 #include <stdio.h>
