@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INPUT_LEN   51
-#define CPD_LEN     5
+#define INPUT_LEN   101
+#define CPD_LEN     10
 
 /*
 **Struct contains information about an element or a molecule
@@ -47,6 +47,8 @@ int stringToInt(char character)
 {
     switch (character)
     {
+    case 0:   return -1;
+    case '0': return 0;
     case '1': return 1;
     case '2': return 2;
     case '3': return 3;
@@ -56,11 +58,10 @@ int stringToInt(char character)
     case '7': return 7;
     case '8': return 8;
     case '9': return 9;
-    case '0': return 0;
-    case '+': return 10;
-    case '-': return 11;
-    case ' ': return 12;
-    default: return 13;
+    case '+': return 11;
+    case '-': return 12;
+    case ' ': return 13;
+    default:  return 10;
     }
 }
 
@@ -115,9 +116,61 @@ float elementFind(char* chemical, int amount)
 /*
 ** UNFINISHED
 */
-void compoundRead(char chemical[CPD_LEN])
+void compoundRead(char compound[INPUT_LEN])
 {
+    printf("'%s'", compound);
+    exit(0);
 
+    /*
+    Moved from inputRead()
+    root        = (struct CPD_NODE *) malloc( sizeof(struct CPD_NODE) );
+    root->next  = 0;
+    conductor   = root;
+    conductor->compound.amount = 0; //Remove garbage value (if any)
+        while(1)
+        {
+            currentChar = stringToInt( input[j] );
+
+
+            //This is tested twice for the first number
+            if (currentChar >= 0 &&
+                currentChar <= 9)
+            {
+                j++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        while(j)
+        {
+            j--;
+
+            currentChar = stringToInt( input[j] );
+
+            conductor->compound.amount += (currentChar * exponentiate(10, j) );
+            //printf("j: %d, %d, %d\n", j, (currentChar * exponentiate(10, j) ), currentChar );
+        }
+    }
+    else
+    {
+        switch(currentChar):
+        {
+        case 10:
+
+        case 11:
+
+        case 12:
+
+        case 13:
+
+        default:
+            printf("\nSomething went wrong! Report this with proof at the GitHub issues page");
+            exit(-1);
+        }
+    }*/
 }
 
 /*
@@ -141,7 +194,8 @@ void help()
 void inputRead()
 {
     int  i, j, currentChar;
-    char input[INPUT_LEN];
+    char input   [INPUT_LEN] = {[0 ... (INPUT_LEN - 1)] = '\0'};
+    char compound[CPD_LEN]   = {[0 ... (CPD_LEN - 1)]   = '\0'};
 
     //Program UI
     while(1)
@@ -158,63 +212,39 @@ void inputRead()
         break;
     }
 
-    root        = (struct CPD_NODE *) malloc( sizeof(struct CPD_NODE) );
-    root->next  = 0;
-    conductor   = root;
-
     for(i = 0, j = 0; i < INPUT_LEN; i++)
     {
         currentChar = stringToInt( input[i] );
 
-        if(currentChar >= 0 &&
-           currentChar <= 9)
+        if( currentChar >= 0 &&
+            currentChar <= 10)
         {
             while(1)
             {
-                currentChar = stringToInt( input[j] );
-                conductor->compound.amount = 0;
+                currentChar = stringToInt( input[i + j] );
 
-                //This is tested twice for the first number
-                if (currentChar >= 0 &&
-                    currentChar <= 9)
+                if( currentChar >= 0 &&
+                    currentChar <= 10)
                 {
+                    compound[j] = input[i + j];
                     j++;
                 }
                 else
                 {
+                    i += (j - 1);
+                    j  = 0;
+
+                    compoundRead(compound);
+
                     break;
                 }
-            }
-
-            while(j)
-            {
-                j--;
-
-                currentChar = stringToInt( input[j] );
-
-                conductor->compound.amount += (currentChar * exponentiate(10, j) );
-                //printf("j: %d, %d, %d\n", j, (currentChar * exponentiate(10, j) ), currentChar );
             }
         }
         else
         {
-            switch(currentChar):
-            {
-            case 10:
-
-            case 11:
-
-            case 12:
-
-            case 13:
-
-            default:
-                printf("\nSomething went wrong! Report this with proof at the GitHub issues page");
-                exit(-1);
-            }
+            i++;
         }
     }
-    printf("\nConductor->compound.amount: %d", conductor->compound.amount);
 }
 
 /*
