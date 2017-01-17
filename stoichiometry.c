@@ -13,7 +13,8 @@
 /*
 **Struct contains information about an element or a molecule
 */
-struct ELEMENT{
+struct ELEMENT
+{
     int     amount;
     int     number;
     char    name[13];
@@ -25,7 +26,8 @@ struct ELEMENT{
 ** COMPOUND is the combination of 2 or more different types of elements
 ** A compound can contain multiple compounds, stored in linked list CPD_NODE
 */
-struct COMPOUND{
+struct COMPOUND
+{
     int     amount;
     float   massTotal;
     struct  ELEMENT elements[CPD_LEN];
@@ -34,7 +36,8 @@ struct COMPOUND{
 /*
 ** Linked list of compounds
 */
-struct CPD_NODE{
+struct CPD_NODE
+{
     int ID;
     struct COMPOUND compound;
     struct CPD_NODE *next;
@@ -47,7 +50,8 @@ int stringToInt(char character)
 {
     switch (character)
     {
-    case 0:   return -1;
+    case 0:
+    case 10:  return -1;
     case '0': return 0;
     case '1': return 1;
     case '2': return 2;
@@ -78,6 +82,14 @@ int exponentiate(short base, short exponent)
         exponent--;
     }
     return power;
+}
+
+/*
+** Set an entire array to '\0'
+*/
+void initializeArray(char array[], int length)
+{
+    memset(array, '\0', length * sizeof(array[0]));
 }
 
 /*
@@ -119,57 +131,25 @@ float elementFind(char* chemical, int amount)
 void compoundRead(char compound[INPUT_LEN])
 {
     printf("'%s'", compound);
-    exit(0);
+    int i, j;
 
-    /*
-    Moved from inputRead()
-    root        = (struct CPD_NODE *) malloc( sizeof(struct CPD_NODE) );
+    /*root        = (struct CPD_NODE *) malloc( sizeof(struct CPD_NODE) );
     root->next  = 0;
     conductor   = root;
     conductor->compound.amount = 0; //Remove garbage value (if any)
-        while(1)
-        {
-            currentChar = stringToInt( input[j] );
 
-
-            //This is tested twice for the first number
-            if (currentChar >= 0 &&
-                currentChar <= 9)
-            {
-                j++;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        while(j)
-        {
-            j--;
-
-            currentChar = stringToInt( input[j] );
-
-            conductor->compound.amount += (currentChar * exponentiate(10, j) );
-            //printf("j: %d, %d, %d\n", j, (currentChar * exponentiate(10, j) ), currentChar );
-        }
-    }
-    else
+    for(i = 0, j = 0; i < INPUT_LEN; i++)
     {
-        switch(currentChar):
-        {
-        case 10:
 
-        case 11:
+    }
+    while(j)
+    {
+        j--;
 
-        case 12:
+        currentChar = stringToInt( input[j] );
 
-        case 13:
-
-        default:
-            printf("\nSomething went wrong! Report this with proof at the GitHub issues page");
-            exit(-1);
-        }
+        conductor->compound.amount += (currentChar * exponentiate(10, j) );
+        //printf("j: %d, %d, %d\n", j, (currentChar * exponentiate(10, j) ), currentChar );
     }*/
 }
 
@@ -194,14 +174,17 @@ void help()
 void inputRead()
 {
     int  i, j, currentChar;
-    char input   [INPUT_LEN] = {[0 ... (INPUT_LEN - 1)] = '\0'};
-    char compound[CPD_LEN]   = {[0 ... (CPD_LEN - 1)]   = '\0'};
+    char input   [INPUT_LEN];
+    char compound[CPD_LEN];
+
+    initializeArray(input, INPUT_LEN);
+    initializeArray(compound, CPD_LEN);
 
     //Program UI
     while(1)
     {
         printf("Input your BALANCED chemical equation (type 'help' for help):\n$ ");
-        scanf("%s", input);
+        fgets(input, INPUT_LEN, stdin);
 
         if( strcmp(input, "help") == 0 )
         {
@@ -216,15 +199,15 @@ void inputRead()
     {
         currentChar = stringToInt( input[i] );
 
-        if( currentChar >= 0 &&
-            currentChar <= 10)
+        if(currentChar >= 0
+             && currentChar <= 10)
         {
             while(1)
             {
                 currentChar = stringToInt( input[i + j] );
 
-                if( currentChar >= 0 &&
-                    currentChar <= 10)
+                if(currentChar >= 0
+                   && currentChar <= 10)
                 {
                     compound[j] = input[i + j];
                     j++;
@@ -233,7 +216,6 @@ void inputRead()
                 {
                     i += (j - 1);
                     j  = 0;
-
                     compoundRead(compound);
 
                     break;
@@ -242,7 +224,22 @@ void inputRead()
         }
         else
         {
-            i++;
+            switch(currentChar)
+            {
+            case 11:
+                break;
+            case 12:
+                //product production starts here
+            case 13:
+                initializeArray(compound, CPD_LEN);
+                break;
+            case -1:
+                printf("Done analyzing. If you see this, your input syntax is wrong!");
+                exit(0);
+            default:
+                printf("\nSomething went wrong! Report this with a screenshot at the GitHub issues page");
+                exit(-1);
+            }
         }
     }
 }
