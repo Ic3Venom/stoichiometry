@@ -41,7 +41,7 @@ struct CPD_NODE
     int ID;
     struct COMPOUND compound;
     struct CPD_NODE *next;
-} *root, *conductor;
+};
 
 /*
 ** Altered code, originally from 'ultimatetypingtest main.c'
@@ -130,27 +130,48 @@ float elementFind(char* chemical, int amount)
 */
 void compoundRead(char compound[INPUT_LEN])
 {
-    printf("'%s'", compound);
-    int i, j;
+    int i, j, currentChar;
+    struct CPD_NODE *root, *conductor;
 
-    /*root        = (struct CPD_NODE *) malloc( sizeof(struct CPD_NODE) );
+    root        = (struct CPD_NODE *) malloc( sizeof(struct CPD_NODE) );
     root->next  = 0;
     conductor   = root;
-    conductor->compound.amount = 0; //Remove garbage value (if any)
-
     for(i = 0, j = 0; i < INPUT_LEN; i++)
     {
+        currentChar = stringToInt( compound[i] );
 
+        if(currentChar >= 0 /*Occurs when compound has prefix, len(prefix) is stored in j*/
+             && currentChar <= 9)
+        {
+            j++;
+        }
+        else                /*Occurs when compound has no prefix/prefix ended*/
+        {
+            break;
+        }
     }
+
+    //I despise this entire piece
+    if (j == 0)
+    {
+        conductor->compound.amount = 1;
+    }
+    else
+    {
+        i = 0;
+    }
+
     while(j)
     {
         j--;
+        currentChar = stringToInt( compound[j] );
 
-        currentChar = stringToInt( input[j] );
+        //Here should be a pointer to conductor.compound.amount, but it won't work
+        i += (currentChar * exponentiate(10, j) );
 
-        conductor->compound.amount += (currentChar * exponentiate(10, j) );
-        //printf("j: %d, %d, %d\n", j, (currentChar * exponentiate(10, j) ), currentChar );
-    }*/
+        conductor->compound.amount = i; /*This is the problem that stops this project in this language*/
+    }
+    printf("Amount of compound: %d\n", conductor->compound.amount);
 }
 
 /*
