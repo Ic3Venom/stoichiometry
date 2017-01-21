@@ -46,20 +46,45 @@ class Compound():
     def __init__(self, symbol):
         self.stat  = Info()
     
-def compoundAnalyze():
-    pass
+def compoundAnalyze(compound):
+    print compound
+    exit(0)
 
 def inputAnalyze():
-    pass
+    '''Takes equation from user and analyze it'''
+    i = 0
+    j = 1
+    compound = []
     
-if __name__ == '__main__':
-
     print "Input your BALANCED chemical equation (type 'help' for help):"
     userInput = raw_input(">>> ")
+    
+    while(True):
 
-    element = Element('H')
+        currentChar = userInput[i]
 
-    element.stat.change('name', 'hydrogen')
-    print element.stat.name()
+        if (currentChar.isdigit()):
+            print 'clinton', i
+            while(True):
+                currentChar = userInput[i + j]
+
+                if (currentChar.isdigit() == False):
+                    compound.append(userInput[i + j])
+                    j += 1
+                else:
+                    i += (j - 1)
+                    j  = 0
+                    compoundAnalyze(compound)
+
+                    break
+        else:
+            if (i >= (len(userInput) - 1)):
+                exit(0)
+            
+        i += 1
+    
+if __name__ == '__main__':
+    
+    inputAnalyze()
 
     exit
