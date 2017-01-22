@@ -45,46 +45,53 @@ class Compound():
     
     def __init__(self, symbol):
         self.stat  = Info()
+
     
 def compoundAnalyze(compound):
     print compound
-    exit(0)
-
-def inputAnalyze():
-    '''Takes equation from user and analyze it'''
-    i = 0
-    j = 1
-    compound = []
     
-    print "Input your BALANCED chemical equation (type 'help' for help):"
-    userInput = raw_input(">>> ")
-    
-    while(True):
+    ''' Was from inputAnalyze, until I remembered about '.split()'
+        while i < len(userInput):
 
         currentChar = userInput[i]
-
-        if (currentChar.isdigit()):
-            print 'clinton', i
-            while(True):
-                currentChar = userInput[i + j]
-
-                if (currentChar.isdigit() == False):
-                    compound.append(userInput[i + j])
-                    j += 1
+        
+        if ( currentChar.isalnum() ):
+            for j in range(0, len(userInput) + 1):
+                
+                try:
+                    currentChar = userInput[i + j]
+                except IndexError:
+                    currentChar = '\0'
+                
+                if ( currentChar.isalnum() ):
+                    compound.append( currentChar )
                 else:
-                    i += (j - 1)
-                    j  = 0
-                    compoundAnalyze(compound)
+                    compoundAnalyze( compound )
 
+                    i += j
+                    j  = 0
+                    compound = []
+                    
                     break
         else:
-            if (i >= (len(userInput) - 1)):
-                exit(0)
-            
-        i += 1
-    
+            #insert '+', '->', 'quit', ' ' exceptions here
+            i += 1
+            pass
+    '''
+    return
+
 if __name__ == '__main__':
+        
+    i = 0
+    compound = []
     
-    inputAnalyze()
+    print 'Input your BALANCED chemical equation (type \'help\' for help):'
+    userInput = raw_input(">>> ")
+
+    compound = userInput.split()
+
+    for i in compound:
+        if i[0].isalnum():
+            compoundAnalyze( i )    
 
     exit
