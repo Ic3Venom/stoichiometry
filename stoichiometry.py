@@ -49,35 +49,27 @@ class Compound():
     
 def compoundAnalyze(compound):
     print compound
-    
-    ''' Was from inputAnalyze, until I remembered about '.split()'
-        while i < len(userInput):
+    currentChar = []
+    j      = 0
+    amount = 0
 
-        currentChar = userInput[i]
+    for i in range(0, len(compound)):
         
-        if ( currentChar.isalnum() ):
-            for j in range(0, len(userInput) + 1):
-                
-                try:
-                    currentChar = userInput[i + j]
-                except IndexError:
-                    currentChar = '\0'
-                
-                if ( currentChar.isalnum() ):
-                    compound.append( currentChar )
-                else:
-                    compoundAnalyze( compound )
-
-                    i += j
-                    j  = 0
-                    compound = []
-                    
-                    break
+        currentChar = compound[i + j]
+        
+        if currentChar.isdigit():
+            j += 1
         else:
-            #insert '+', '->', 'quit', ' ' exceptions here
-            i += 1
-            pass
-    '''
+            break
+        
+    while j >= 0:
+        currentChar = compound[j]
+
+        amount += ( int(currentChar) * pow(10, j) ) #DOES NOT WORK
+
+        j -= 1
+
+    print amount
     return
 
 if __name__ == '__main__':
@@ -85,13 +77,22 @@ if __name__ == '__main__':
     i = 0
     compound = []
     
-    print 'Input your BALANCED chemical equation (type \'help\' for help):'
-    userInput = raw_input(">>> ")
+    while True:
+        print 'Input your BALANCED chemical equation (type \'help\' for help):'
+        userInput = raw_input(">>> ")
 
+        if userInput == 'help':
+            help()
+        else:
+            break
+    
     compound = userInput.split()
 
     for i in compound:
         if i[0].isalnum():
-            compoundAnalyze( i )    
+            compoundAnalyze( i )
+        else:
+            #insert '+', '->', 'quit', ' ' exceptions here
+            pass
 
     exit
