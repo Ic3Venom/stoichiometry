@@ -5,6 +5,7 @@ class Info:
         self.data = {}
         self.data = self.data.fromkeys(
             ['number','name','symbol','mass','amount'])
+        self.data = self.data.fromkeys(self.data.iterkeys(), 0)
     
     def change(self, key, value):
         '''Changes one of the data values'''
@@ -45,39 +46,40 @@ class Compound():
     
     def __init__(self, symbol):
         self.stat  = Info()
+        self.stat.symbol = symbol
 
-    
-def compoundAnalyze(compound):
-    print compound
-    currentChar = []
-    j      = 0
-    amount = 0
+    def amount(self):
+        currentChar = [ ]
+        amount = 0
+        j = 0
 
-    for i in range(0, len(compound)):
-        
-        currentChar = compound[i + j]
-        
-        if currentChar.isdigit():
-            j += 1
-        else:
-            break
-        
-    while j >= 0:
-        currentChar = compound[j]
+        for i in range(0, len(self.stat.symbol)):
+            
+            currentChar = self.stat.symbol[i + j]
+            
+            if currentChar.isdigit():
+                j += 1
+            else:
+                i = j
+                break
 
-        amount += ( int(currentChar) * pow(10, j) ) #DOES NOT WORK
+        while j >= 0:
+            
+            currentChar = self.stat.symbol[j]
+            self.stat.change('amount', ( self.stat.amount() + (int(currentChar) * pow(10, i-j)) ))
 
-        j -= 1
+            j -= 1
 
-    print amount
-    return
+    def name(self):
+        print self.stat.name
 
-if __name__ == '__main__':
-        
-    i = 0
-    compound = []
+
+if __name__ == '__main__':    
+    j = 0
+    compoundList = [ ]
     
     while True:
+        
         print 'Input your BALANCED chemical equation (type \'help\' for help):'
         userInput = raw_input(">>> ")
 
@@ -85,14 +87,20 @@ if __name__ == '__main__':
             help()
         else:
             break
-    
-    compound = userInput.split()
 
-    for i in compound:
+    for i in userInput.split():
+        
         if i[0].isalnum():
-            compoundAnalyze( i )
+            compoundList.append( Compound(i) )
+            compoundList[j].amount()
         else:
             #insert '+', '->', 'quit', ' ' exceptions here
             pass
+        
+        j += 1
+
+    for i in compoundList:
+        
+        print i.stat.amount()
 
     exit
