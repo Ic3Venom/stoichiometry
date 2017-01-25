@@ -15,15 +15,15 @@ class Info:
                 return self.data[key]
     
     def number(self):
-        return self.data['number']
+        return int(self.data['number'])
     def name(self):
-        return self.data['name']
+        return int(self.data['name'])
     def symbol(self):
-        return self.data['symbol']
+        return int(self.data['symbol'])
     def mass(self):
-        return self.data['mass']
+        return int(self.data['mass'])
     def amount(self):
-        return self.data['amount']
+        return int(self.data['amount'])
     
 class Element:
     '''A class to hold element information'''
@@ -62,16 +62,14 @@ class Compound():
             else:
                 i = j
                 break
-
-        while j >= 0:
-            
-            currentChar = self.stat.symbol[j]
-            self.stat.change('amount', ( self.stat.amount() + (int(currentChar) * pow(10, i-j)) ))
-
-            j -= 1
-
-    def name(self):
-        print self.stat.name
+    
+        if not self.stat.symbol[0].isdigit():
+            self.stat.change('amount', 1)
+        else:
+            self.stat.change('amount', int( self.stat.symbol[ 0 : j+1 ] ))
+        
+    def symbol(self):
+        print self.stat.symbol
 
 
 if __name__ == '__main__':    
@@ -101,6 +99,6 @@ if __name__ == '__main__':
 
     for i in compoundList:
         
-        print i.stat.amount()
+        print i.stat.amount() + 10
 
     exit
