@@ -30,6 +30,7 @@ class Element:
 
     def __init__(self, symbol):
         self.stat  = Info()
+        self.stat.symbol = symbol
 
     def elementFind(self):
         '''Finds element in periodictable.txt'''
@@ -37,7 +38,9 @@ class Element:
 
         for line in f:
             for word in line.split():
-                print word,
+                if word == self.stat.symbol:
+                    print hi,
+                    #continue to find specific things 
 
         f.close()
 
@@ -66,7 +69,7 @@ class Compound():
         if not self.stat.symbol[0].isdigit():
             self.stat.change('amount', 1)
         else:
-            self.stat.change('amount', int( self.stat.symbol[ 0 : j+1 ] ))
+            self.stat.change('amount', self.stat.symbol[ 0 : j+1 ])
         
     def symbol(self):
         print self.stat.symbol
@@ -82,7 +85,15 @@ if __name__ == '__main__':
         userInput = raw_input(">>> ")
 
         if userInput == 'help':
-            help()
+            print '-----------------------------------<HELP>-------------------------------------'
+            print 'The expected input for this program is as follows:'
+            print '\tR + R... -> P + P...'
+            print '* R: Reactants (any order, seperated by the syntax, \' + \'(space plus space)'
+            print '* ->: yields symbol, please put a space before and after it'
+            print '* P: Products (any order, separated by the syntax, \' +  \'(space plus space)'
+            print 'Any bugs, issues, requests? Put them in the GitHub repo.'
+            print '------------------------------------------------------------------------------\n'
+
         else:
             break
 
@@ -92,11 +103,12 @@ if __name__ == '__main__':
             compoundList.append( Compound(i) )
             compoundList[j].amount()
         else:
-            #insert '+', '->', 'quit', ' ' exceptions here
+
             pass
         
         j += 1
 
+    #debug
     for i in compoundList:
         
         print i.stat.amount() + 10
