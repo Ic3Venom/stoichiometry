@@ -12,9 +12,8 @@ class Info:
         except:
             return value
 
-        types = ['symbol', 'number', 'mass', 'name', 'amount']
         j = 0
-        for i in types:
+        for i in ['symbol', 'number', 'mass', 'name', 'amount']:
             if i == value:
                 return j
             j += 1 
@@ -23,7 +22,6 @@ class Info:
         '''Changes one of the data values'''
         index = self.index(index)
         self.data[index] = value
-        print self.data
         
     def symbol(self):
         return self.data[0]
@@ -49,10 +47,8 @@ class Element:
 
         value = self.stat.index(value)
         maxSearch = self.stat.index(value)
-        print 'maxSearch: %d' % maxSearch
-        j = 0
+        
         for line in f:
-            j += 1
             for i in range( maxSearch + 1 ):
                 if line.split()[i] == self.stat.symbol():
                     f.close()
@@ -87,10 +83,9 @@ class Compound():
         if not self.stat.symbol[0].isdigit():
             self.stat.change('amount', 1)
         else:
-            self.stat.change('amount', self.stat.symbol[ 0 : j+1 ])
+            self.stat.change('amount', self.stat.symbol[ 0 : j + 1 ])
 
-if __name__ == '__main__':    
-    j = 0
+if __name__ == '__main__':
     compoundList = [ ]
     
     while True:
@@ -111,18 +106,18 @@ if __name__ == '__main__':
         else:
             break
 
+    j = 0
     for i in userInput.split():
         
         if i.isalnum():
             compoundList.append( Compound(i) )
-            compoundList[compoundList.index(i)].amount()
+            compoundList[j].amount()
         else:
             #Exception case ' ', '+', '->'
             pass
-        
         j += 1
 
     #debug
     for i in compoundList:
         
-        print i.stat.amount() + 10
+        print int( i.stat.amount() ) + 10
