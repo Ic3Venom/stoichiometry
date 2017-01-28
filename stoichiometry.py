@@ -17,12 +17,7 @@ class Info:
             if i == value:
                 return j
             j += 1 
-            
-    def change(self, index, value):
-        '''Changes one of the data values'''
-        index = self.index(index)
-        self.data[index] = value
-        
+
     def symbol(self):
         return self.data[0]
     def number(self):
@@ -36,10 +31,6 @@ class Info:
    
 class Element:
     '''A class to hold element information'''
-
-    def __init__(self, symbol):
-        self.stat  = Info()
-        self.stat.change('symbol', symbol)
 
     def find(self, value):
         '''Finds element in periodictable.txt, returns element mass'''
@@ -58,38 +49,38 @@ class Element:
             f.close()
             exit(1)
 
-class Compound():
-    '''A class to hold compounds, which hold class(Element)'''
-    
     def __init__(self, symbol):
         self.stat  = Info()
         self.stat.symbol = symbol
 
+class Compound():
+    '''A class to hold compounds, which hold class(Element)'''
     def amount(self):
-        currentChar = [ ]
-        amount = 0
         j = 0
 
         for i in range(0, len(self.stat.symbol)):
-            
             currentChar = self.stat.symbol[i + j]
             
             if currentChar.isdigit():
                 j += 1
             else:
-                i = j
                 break
             
         if not self.stat.symbol[0].isdigit():
-            self.stat.change('amount', 1)
+            return 1
         else:
-            self.stat.change('amount', self.stat.symbol[ 0 : j + 1 ])
+            return int( self.stat.symbol[0:j+1] )
+
+    
+    def __init__(self, symbol):
+        self.stat  = Info()
+        self.stat.symbol = symbol
+        self.stat.amount = self.amount()
 
 if __name__ == '__main__':
     compoundList = [ ]
     
     while True:
-        
         print 'Input your BALANCED chemical equation (type \'help\' for help)'
         userInput = raw_input(">>> ")
 
@@ -106,18 +97,13 @@ if __name__ == '__main__':
         else:
             break
 
-    j = 0
     for i in userInput.split():
-        
         if i.isalnum():
             compoundList.append( Compound(i) )
-            compoundList[j].amount()
         else:
             #Exception case ' ', '+', '->'
             pass
-        j += 1
 
     #debug
     for i in compoundList:
-        
-        print int( i.stat.amount() ) + 10
+        print i.stat.amount + 10
