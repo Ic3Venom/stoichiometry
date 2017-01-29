@@ -1,9 +1,9 @@
 class Info:
     '''Holds information of Elements and Compounds'''
-    
+
     def __init__(self):
         #Real names (in order): symbol, number, mass, name, amount
-        self.data = ['', 0, 0.0, '', 0] 
+        self.data = ['', 0, 0.0, '', 0]
 
     def index(self, value):
         '''Returns index value of corresponding real name'''
@@ -16,7 +16,7 @@ class Info:
         for i in ['symbol', 'number', 'mass', 'name', 'amount']:
             if i == value:
                 return j
-            j += 1 
+            j += 1
 
     def symbol(self):
         return self.data[0]
@@ -28,7 +28,7 @@ class Info:
         return self.data[3]
     def amount(self):
         return self.data[4]
-   
+
 class Element:
     '''A class to hold element information'''
 
@@ -38,7 +38,7 @@ class Element:
 
         value = self.stat.index(value)
         maxSearch = self.stat.index(value)
-        
+
         for line in f:
             for i in range( maxSearch + 1 ):
                 if line.split()[i] == self.stat.symbol():
@@ -50,27 +50,24 @@ class Element:
             exit(1)
 
     def __init__(self, symbol):
-        self.stat  = Info()
+        self.stat = Info()
         self.stat.symbol = symbol
 
 class Compound():
     '''A class to hold compounds, which hold class(Element)'''
     def amount(self):
-        j = 0
+        for i in range(len(self.stat.symbol)):
+            currentChar = self.stat.symbol[i]
 
-        for i in range(0, len(self.stat.symbol)):
-            currentChar = self.stat.symbol[i + j]
-            
-            if currentChar.isdigit():
-                j += 1
-            else:
+            if not currentChar.isdigit():
                 break
-            
+
         if not self.stat.symbol[0].isdigit():
             return 1
         else:
-            return int( self.stat.symbol[0:j+1] )
-
+            return int( self.stat.symbol[0:i] )
+    def analyze(self):
+        pass    
     
     def __init__(self, symbol):
         self.stat  = Info()
@@ -79,7 +76,7 @@ class Compound():
 
 if __name__ == '__main__':
     compoundList = [ ]
-    
+
     while True:
         print 'Input your BALANCED chemical equation (type \'help\' for help)'
         userInput = raw_input(">>> ")
@@ -103,7 +100,3 @@ if __name__ == '__main__':
         else:
             #Exception case ' ', '+', '->'
             pass
-
-    #debug
-    for i in compoundList:
-        print i.stat.amount + 10
