@@ -57,66 +57,81 @@ class Element:
     def __init__(self, symbol, totalAmount):
         self.stat = Info()
         self.stat.symbol = symbol
-        self.stat.amount = amount * self.amount()
+        self.stat.amount = totalAmount #* self.amount()
 
-class Compound():
+class Compound:
     '''A class to hold compounds, which hold class(Element)'''
 
     def analyze(self):
         '''Determines interior elements and compounds and puts them in array(inside)'''
         j = 0
-        
-        for i in range( len( str(self.stat.amount) ), len(self.stat.symbol) ):
+        brackets = 0
+
+        print len(str(self.stat.amount)), len(self.stat.symbol)
+        for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
             print 'i: %d, %s' % (i, self.stat.symbol[i])
+            if self.stat.symbol[i].isalnum() or self.stat.symbol[i] == '(' or self.stat.symbol[i] == ')':
+                '''
+                    NaNO3
+                    -----
+                    0 1 Capital letter, continue
+                    1 2 Lower case, continue
+                    2 1 Capital letter, end previous
+                    3 1 Capital letter, end previous
+                    4 2 Number, multiply to current
+                    5 0 End of Compound
 
-            #if: i is a bracket, then then find subscript of bracket or find more brackets
-            '''if self.stat.symbol[i] == '(':
-                bracketCount  = 0
-                bracketAmount = 0
+
+                    Mg(NO3)2
+                    --------
+                    0 1 Capital letter, continue
+                    1 2 Lower case letter, continue
+                    2 0 Parenthesis, end previous, find end parenthesis
+                    2 0 1 Capital letter, ignore
+                    2 0 2 Capital letter, ignore
+                    2 0 3 End parenthesis, now find amount assigned
+                    2 0 4 Number, continue
+                    2 0 4 Not a number, end number, add value to array
+                    3 1 Capital letter, end previous
+                    4 1 Capital letter, end previous, mult previous by end parenthesis
+                    5 2 Number, continue
+                    6 0 Parenthesis, end previous, mult previous by value/end parenthesis
+                    7 0 Number, already known, skip
+                    8 0 End of Compound
+                '''
                 
-                while True:
-                    if self.stat.symbol[i + j] == '(':
-                        bracketCount += 1
-                    elif self.stat.symbol[i + j] == ')':
-                        bracketCount -= 1
-                    if bracaketCount == 0:
-                        k = j
-                        while True:
-                            j += 1 
-                            if not self.stat.symbol[i + j].isdecimal():
-                                self.inside.append(
-                                    Element(
-                                        self.stat.symbol[k: k + j],
-                                        self.stat.amount * self.stat.symbol[i + j: k + j)
+                if self.stat.symbol[i].isalpha() and j == 0:
+                    print 'Inside if statement 1; i: %d, %s, %d' % (i, self.stat.symbol[i], self.stat.amount)
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol[ i-j:i ],
+                            self.stat.amount * brackets) )
+    
+                if self.stat.symbol[i] == '(':
+                    print 'Inside if statement 2; i: %d, %s' % (i, self.stat.symbol[i])
+                    for k in range( i, len(self.stat.symbol) ):
+                        print 'Inside if statement 2.1; i: %d, %s' % (i, self.stat.symbol[k])
+                        if self.stat.symbol[i] == ')':
+                            brackets = k
+                            break
 
+                    for k in range( i + brackets, len(self.stat.symbol) ):
+                        print 'Inside if statement 2.2; i: %d, %s' % (i, self.stat.symbol[k])
 
-                while True:                    
-                    self.stat.symbol[j] != ')'
-                    j += 1
-
-                    if j > len( self.stat.symbol ):
-                        print 'ERROR: unable to end parenthesis \')\'. Exiting program'
-                        exit(1)'''
-
-            
-            if self.stat.symbol[i].isupper() and not j == 0:
-                self.inside.append(
+                        try:
+                            int( self.stat.symbol[k] ).isdecimal()
+                            brackets = self.stat.symbol[i + brackets:k] 
+                        except:
+                            brackets = 1
+                        
+                '''self.elements.append(
                     Element(
-                        self.stat.symbol[len(str.stat.symbol) - i: j + 1],
-                        self.stat.amount) )
-
-            #if: i is decimal, continue until Capital Letter or end of Compound
-            if self.stat.symbol[i].isdecimal():
-                while True:
-
-                    if j > len( self.stat.symbol ):
-                        pass
-
-            '''self.elements.append(
-                Element(
-                    self.stat.symbol[j: i],
-                    self.stat.amount)'''
-
+                        self.stat.symbol[j: i],
+                        self.stat.amount)'''
+            else:
+                print 'ERROR: unknown character %c. Exiting program.'% self.stat.symbol[i]
+        print brackets, self.stat.symbol,self.stat.amount
+        
     def coef(self):
         for i in range( len(self.stat.symbol) ):
             currentChar = self.stat.symbol[i]
@@ -139,12 +154,18 @@ class Compound():
         return j
 
     def __init__(self, symbol):
+        print 'hello?'
         self.stat = Info()
+        print 'Info() complete'
         self.stat.symbol = symbol
+        print 'symbol complete'
         self.stat.amount = self.coef()
+        print 'coef() complete'
 
         self.inside = []
+        self.insideAmounts = []
         self.analyze()
+        print 'analyze complete'
  
 if __name__ == '__main__':
     compoundList = [ ]
@@ -167,8 +188,10 @@ if __name__ == '__main__':
             break
 
     for i in userInput.split():
-        if i.isalnum():
+        print i
+        if i[0].isalnum():
             compoundList.append( Compound(i) )
+            print i
         else:
             #Exception case ' ', '+', '->'
             pass
