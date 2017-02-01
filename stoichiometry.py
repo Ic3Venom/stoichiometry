@@ -67,70 +67,70 @@ class Compound:
         j = 0
         brackets = 0
 
-        print len(str(self.stat.amount)), len(self.stat.symbol)
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
-            print 'i: %d, %s' % (i, self.stat.symbol[i])
-            if self.stat.symbol[i].isalnum() or self.stat.symbol[i] == '(' or self.stat.symbol[i] == ')':
-                '''
-                    NaNO3
-                    -----
-                    0 1 Capital letter, continue
-                    1 2 Lower case, continue
-                    2 1 Capital letter, end previous
-                    3 1 Capital letter, end previous
-                    4 2 Number, multiply to current
-                    5 0 End of Compound
+            '''
+                NaNO3
+                -----
+                0 1 Capital letter, continue
+                1 2 Lower case, continue
+                2 1 Capital letter, end previous
+                3 1 Capital letter, end previous
+                4 2 Number, multiply to current
+                5 0 End of Compound
 
 
-                    Mg(NO3)2
-                    --------
-                    0 1 Capital letter, continue
-                    1 2 Lower case letter, continue
-                    2 0 Parenthesis, end previous, find end parenthesis
-                    2 0 1 Capital letter, ignore
-                    2 0 2 Capital letter, ignore
-                    2 0 3 End parenthesis, now find amount assigned
-                    2 0 4 Number, continue
-                    2 0 4 Not a number, end number, add value to array
-                    3 1 Capital letter, end previous
-                    4 1 Capital letter, end previous, mult previous by end parenthesis
-                    5 2 Number, continue
-                    6 0 Parenthesis, end previous, mult previous by value/end parenthesis
-                    7 0 Number, already known, skip
-                    8 0 End of Compound
-                '''
-                
-                if self.stat.symbol[i].isalpha() and j == 0:
-                    print 'Inside if statement 1; i: %d, %s, %d' % (i, self.stat.symbol[i], self.stat.amount)
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol[ i-j:i ],
-                            self.stat.amount * brackets) )
-    
-                if self.stat.symbol[i] == '(':
-                    print 'Inside if statement 2; i: %d, %s' % (i, self.stat.symbol[i])
-                    for k in range( i, len(self.stat.symbol) ):
-                        print 'Inside if statement 2.1; i: %d, %s' % (i, self.stat.symbol[k])
-                        if self.stat.symbol[i] == ')':
-                            brackets = k
-                            break
+                Mg(NO3)2
+                --------
+                0 1 Capital letter, continue
+                1 2 Lower case letter, continue
+                2 0 Parenthesis, end previous, find end parenthesis
+                2 0 1 Capital letter, ignore
+                2 0 2 Capital letter, ignore
+                2 0 3 End parenthesis, now find amount assigned
+                2 0 4 Number, continue
+                2 0 4 Not a number, end number, add value to array
+                3 1 Capital letter, end previous
+                4 1 Capital letter, end previous, mult previous by end parenthesis
+                5 2 Number, continue
+                6 0 Parenthesis, end previous, mult previous by value/end parenthesis
+                7 0 Number, already known, skip
+                8 0 End of Compound
 
-                    for k in range( i + brackets, len(self.stat.symbol) ):
-                        print 'Inside if statement 2.2; i: %d, %s' % (i, self.stat.symbol[k])
 
-                        try:
-                            int( self.stat.symbol[k] ).isdecimal()
-                            brackets = self.stat.symbol[i + brackets:k] 
-                        except:
-                            brackets = 1
-                        
-                '''self.elements.append(
+                NaNa
+
+                0:1
+                2:3
+            '''
+
+            #NEED TO FIX THIS
+            if self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
+                self.inside.append(
                     Element(
-                        self.stat.symbol[j: i],
-                        self.stat.amount)'''
-            else:
-                print 'ERROR: unknown character %c. Exiting program.'% self.stat.symbol[i]
-        print brackets, self.stat.symbol,self.stat.amount
+                        self.stat.symbol[ j + self.stat.amount:i ],
+                        self.stat.amount * brackets) )
+                j = i
+
+            if self.stat.symbol[i] == '(':
+
+                for k in range( i, len(self.stat.symbol) ):
+                    if self.stat.symbol[i] == ')':
+                        brackets = k
+                        break
+
+                for k in range( i + brackets, len(self.stat.symbol) ):
+
+                    try:
+                        int( self.stat.symbol[k] ).isdecimal()
+                        brackets = int( self.stat.symbol[ i+brackets:k ] )
+                    except:
+                        brackets = 1
+                        
+            if i == len(self.stat.symbol) - 1:
+                self.inside.append(
+                    Element(
+                        self.stat.symbol[ j:i+1 ],
+                        self.stat.amount) )
         
     def coef(self):
         for i in range( len(self.stat.symbol) ):
@@ -141,6 +141,8 @@ class Compound:
 
         #if Compound has no coefficent, amount defaults to 1
         if not self.stat.symbol[0].isdigit():
+            change = '1' + self.stat.symbol
+            self.stat.symbol = change
             return 1
         else:
             return int( self.stat.symbol[0:i] )
@@ -154,18 +156,16 @@ class Compound:
         return j
 
     def __init__(self, symbol):
-        print 'hello?'
         self.stat = Info()
-        print 'Info() complete'
         self.stat.symbol = symbol
-        print 'symbol complete'
         self.stat.amount = self.coef()
-        print 'coef() complete'
 
         self.inside = []
         self.insideAmounts = []
         self.analyze()
-        print 'analyze complete'
+
+        for i in self.inside:
+            print 'hi', i.stat.symbol, i.stat.amount
  
 if __name__ == '__main__':
     compoundList = [ ]
@@ -188,10 +188,10 @@ if __name__ == '__main__':
             break
 
     for i in userInput.split():
-        print i
         if i[0].isalnum():
             compoundList.append( Compound(i) )
-            print i
         else:
+            if i not in [' ', '+', '->']:
+                print 'gg'
             #Exception case ' ', '+', '->'
             pass
