@@ -50,7 +50,7 @@ class Element:
                     f.close()
                     return line.split()[maxSearch]
         else:
-            print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol()
+            print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
             f.close()
             exit(1)
 
@@ -63,53 +63,22 @@ class Compound:
     '''A class to hold compounds, which hold class(Element)'''
 
     def analyze(self):
-        '''Determines interior elements and compounds and puts them in array(inside)'''
+        '''Determines interior elements and puts them in array(inside)'''
         j = 0
         brackets = 0
 
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
-            '''
-                NaNO3
-                -----
-                0 1 Capital letter, continue
-                1 2 Lower case, continue
-                2 1 Capital letter, end previous
-                3 1 Capital letter, end previous
-                4 2 Number, multiply to current
-                5 0 End of Compound
 
-
-                Mg(NO3)2
-                --------
-                0 1 Capital letter, continue
-                1 2 Lower case letter, continue
-                2 0 Parenthesis, end previous, find end parenthesis
-                2 0 1 Capital letter, ignore
-                2 0 2 Capital letter, ignore
-                2 0 3 End parenthesis, now find amount assigned
-                2 0 4 Number, continue
-                2 0 4 Not a number, end number, add value to array
-                3 1 Capital letter, end previous
-                4 1 Capital letter, end previous, mult previous by end parenthesis
-                5 2 Number, continue
-                6 0 Parenthesis, end previous, mult previous by value/end parenthesis
-                7 0 Number, already known, skip
-                8 0 End of Compound
-
-
-                NaNa
-
-                0:1
-                2:3
-            '''
-
-            #NEED TO FIX THIS
+            #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
             if self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
                 self.inside.append(
                     Element(
                         self.stat.symbol[ j + self.stat.amount:i ],
                         self.stat.amount * brackets) )
-                j = i
+                if j == 0:
+                    j = i - 1
+                else:
+                    j = i
 
             if self.stat.symbol[i] == '(':
 
@@ -163,9 +132,6 @@ class Compound:
         self.inside = []
         self.insideAmounts = []
         self.analyze()
-
-        for i in self.inside:
-            print 'hi', i.stat.symbol, i.stat.amount
  
 if __name__ == '__main__':
     compoundList = [ ]
@@ -188,10 +154,15 @@ if __name__ == '__main__':
             break
 
     for i in userInput.split():
-        if i[0].isalnum():
-            compoundList.append( Compound(i) )
-        else:
-            if i not in [' ', '+', '->']:
-                print 'gg'
-            #Exception case ' ', '+', '->'
-            pass
+        for j in i:
+            if j.isalnum() or j in [')', '(']:
+                pass
+            elif j in [' ', '+', '->']:
+                #Exception case ' ', '+', '->'
+                pass
+            else:
+                print 'Unknown character %c in userInput.' % j,
+                print 'If you believe this is wrong, report this in the GitHub repo.'
+                exit(1)
+                
+        compoundList.append( Compound(i) )
