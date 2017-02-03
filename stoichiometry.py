@@ -35,8 +35,8 @@ class Element:
     def amount(self):
         for i in range( len(self.stat.symbol) ):
             pass
-            
-    
+
+
     def find(self, value):
         '''Finds element in periodictable.txt, returns element mass'''
         f = open('periodictable.txt', 'r')
@@ -57,7 +57,7 @@ class Element:
     def __init__(self, symbol, totalAmount):
         self.stat = Info()
         self.stat.symbol = symbol
-        self.stat.amount = totalAmount #* self.amount()
+        self.stat.amount = totalAmount #* self.amount() TODO: UNCOMMENT WHEN USED
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
@@ -65,7 +65,7 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
         j = 0
-        brackets = 0
+        brackets = 1
 
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
 
@@ -83,24 +83,28 @@ class Compound:
             if self.stat.symbol[i] == '(':
 
                 for k in range( i, len(self.stat.symbol) ):
-                    if self.stat.symbol[i] == ')':
-                        brackets = k
-                        break
+                    if self.stat.symbol[k] == ')':
+                       brackets = k + 1
+                       break
 
-                for k in range( i + brackets, len(self.stat.symbol) ):
+                #Need to fix this
+                for k in range( brackets, len(self.stat.symbol) ):
+                    if not self.stat.symbol[k].isdecimal():
+                       brackets = 1
+                       break
 
-                    try:
-                        int( self.stat.symbol[k] ).isdecimal()
-                        brackets = int( self.stat.symbol[ i+brackets:k ] )
-                    except:
-                        brackets = 1
-                        
+                    #brackets = int( self.stat.symbol[ brackets:k ] )
+                    #debug
+                    print 'brackets:', brackets
+                    if not self.stat.symbol[k].isdecimal():
+                       break
+
             if i == len(self.stat.symbol) - 1:
                 self.inside.append(
                     Element(
                         self.stat.symbol[ j:i+1 ],
-                        self.stat.amount) )
-        
+                        self.stat.amount * brackets) )
+
     def coef(self):
         for i in range( len(self.stat.symbol) ):
             currentChar = self.stat.symbol[i]
@@ -115,7 +119,7 @@ class Compound:
             return 1
         else:
             return int( self.stat.symbol[0:i] )
-        
+
     def elementLen(self):
         j = 0
         for i in self.stat.symbol:
@@ -130,9 +134,8 @@ class Compound:
         self.stat.amount = self.coef()
 
         self.inside = []
-        self.insideAmounts = []
         self.analyze()
- 
+
 if __name__ == '__main__':
     compoundList = [ ]
 
@@ -143,7 +146,7 @@ if __name__ == '__main__':
         if userInput == 'help':
             print '\nWelcome to the stoichiometry.py help page!\n'
             print 'The expected input for this program is as follows:'
-            print '- R + R... -> P + P...'
+            print '\tR + R... -> P + P...'
             print '* R: Reactants (any order, seperated by the syntax, \' + \'(space plus space)'
             print '* ->: yields symbol, please put a space before and after it'
             print '* P: Products (any order, separated by the syntax, \' +  \'(space plus space)'
@@ -156,7 +159,7 @@ if __name__ == '__main__':
     for i in userInput.split():
         for j in i:
             if j.isalnum() or j in [')', '(']:
-                pass
+               pass
             elif j in [' ', '+', '->']:
                 #Exception case ' ', '+', '->'
                 pass
@@ -164,5 +167,10 @@ if __name__ == '__main__':
                 print 'Unknown character %c in userInput.' % j,
                 print 'If you believe this is wrong, report this in the GitHub repo.'
                 exit(1)
-                
+
         compoundList.append( Compound(i) )
+
+    #debug
+    for i in compoundList:
+        for j in i.inside:
+            print j.stat.symbol, j.stat.amount
