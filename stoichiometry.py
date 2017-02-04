@@ -67,6 +67,23 @@ class Compound:
         j = 0
         brackets = 1
 
+        for i in range( len(str(self.stat.amount)), len(self.stat.symbol)):
+
+            if self.stat.symbol[i] == '(':
+
+                for k in range( i, len(self.stat.symbol) ):
+                    if self.stat.symbol[k] == ')':
+                       brackets = k + 1
+                       break
+
+                #Possibly fixed
+                for k in range( brackets, len(self.stat.symbol) ):
+                    if not self.stat.symbol[k].isdecimal():
+                       brackets = int( self.stat.symbol[ brackets:k ] )
+                       break
+                else:
+                     brackets = int( self.stat.symbol[ brackets:len(self.stat.symbol) ] )
+
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
 
             #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
@@ -80,30 +97,18 @@ class Compound:
                 else:
                     j = i
 
-            if self.stat.symbol[i] == '(':
+            if not self.stat.symbol[i].isalnum():
+               print 'greetings', j, i
+               self.inside.append(
+                   Element(
+                       self.stat.symbol[ j + self.stat.amount:i ],
+                       self.stat.amount * brackets) )
 
-                for k in range( i, len(self.stat.symbol) ):
-                    if self.stat.symbol[k] == ')':
-                       brackets = k + 1
-                       break
-
-                #Need to fix this
-                for k in range( brackets, len(self.stat.symbol) ):
-                    if not self.stat.symbol[k].isdecimal():
-                       brackets = 1
-                       break
-
-                    #brackets = int( self.stat.symbol[ brackets:k ] )
-                    #debug
-                    print 'brackets:', brackets
-                    if not self.stat.symbol[k].isdecimal():
-                       break
-
-            if i == len(self.stat.symbol) - 1:
-                self.inside.append(
-                    Element(
-                        self.stat.symbol[ j:i+1 ],
-                        self.stat.amount * brackets) )
+        else:
+            self.inside.append(
+                Element(
+                    self.stat.symbol[ j:i+1 ],
+                    self.stat.amount * brackets) )
 
     def coef(self):
         for i in range( len(self.stat.symbol) ):
