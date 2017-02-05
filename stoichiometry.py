@@ -25,7 +25,7 @@ class Info:
     def mass(self):
         return self.data[2]
     def name(self):
-        return self.data[3]
+		return self.data[3]
     def amount(self):
         return self.data[4]
 
@@ -52,7 +52,7 @@ class Element:
         else:
             print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
             f.close()
-            exit(1)
+            exit(-1)
 
     def __init__(self, symbol, totalAmount):
         self.stat = Info()
@@ -65,29 +65,85 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
         j = 0
-        brackets = 1
+        bracketAmount  = 1
 
-        for i in range( len(str(self.stat.amount)), len(self.stat.symbol)):
+		#index slice of what's inside the brackets
+        bracketLocation= ()
+
+        #Finds where the brackets are located and what amount is assigned to them
+        for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
 
             if self.stat.symbol[i] == '(':
+               bracketLocation = (i+1,)
 
-                for k in range( i, len(self.stat.symbol) ):
-                    if self.stat.symbol[k] == ')':
-                       brackets = k + 1
+            elif self.stat.symbol[i] == ')':
+               bracketLocation = bracketLocation + (i,)
+
+               #Checking if there are not enough/too many extra brackets
+               if len(bracketLocation) is not 2:
+                   print 'Missing or too many brackets in userInput.',
+                   print 'If you believe this is wrong, report this in the GitHub repo.'
+                   exit(-1)
+
+               for j in range( i + 1, len(self.stat.symbol) ):
+                   if not self.stat.symbol[j].isdecimal():
+                       bracketAmount = int( self.stat.symbol[ bracketLocation[1] + 1:j ] )
+                       print bracketAmount
+                       break
+               else:
+                    bracketAmount = int( self.stat.symbol[i+1:] )
+                    break
+
+        print bracketLocation, self.stat.symbol[bracketLocation[0]:bracketLocation[1]], bracketAmount
+
+		#WILL COMPLETE THIS TOMORROW
+        '''for i in range( len(str(self.stat.amount)), len(self.stat.symbol)):
+
+            if self.stat.symbol[i] == '(':
+                for j in range( i, len(self.stat.symbol) ):
+                    if self.stat.symbol[j] == ')':
+                       brackets = j + 1
                        break
 
                 #Possibly fixed
-                for k in range( brackets, len(self.stat.symbol) ):
-                    if not self.stat.symbol[k].isdecimal():
-                       brackets = int( self.stat.symbol[ brackets:k ] )
+                for j in range( brackets, len(self.stat.symbol) ):
+                    if not self.stat.symbol[j].isdecimal():
+                       brackets = int( self.stat.symbol[ brackets:j ] )
+                       print brackets
                        break
                 else:
                      brackets = int( self.stat.symbol[ brackets:len(self.stat.symbol) ] )
 
+        j = 1
+
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
+            print i, j,
 
             #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
-            if self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
+            if not self.stat.symbol[i].isalnum():
+                print 'if statement 0:', self.stat.symbol[i],
+                if self.stat.symbol[i] == '(':
+                    print 'if statement 1:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount - 1: i ]
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol[ j + self.stat.amount - 1:i ],
+                            self.stat.amount * brackets) )
+                elif self.stat.symbol[i] == ')':
+                    print 'if statement 2:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount:i-1 ]
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol[ j + self.stat.amount:i - 1 ],
+                            self.stat.amount * brackets) )
+                    break
+                else:
+                    print 'if statement 3:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount:i]
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol[ j + self.stat.amount:i ],
+                            self.stat.amount * brackets) )
+
+            elif self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
+                print 'if statement 4:', self.stat.symbol[ j + self.stat.amount:i ], j
                 self.inside.append(
                     Element(
                         self.stat.symbol[ j + self.stat.amount:i ],
@@ -97,18 +153,11 @@ class Compound:
                 else:
                     j = i
 
-            if not self.stat.symbol[i].isalnum():
-               print 'greetings', j, i
-               self.inside.append(
-                   Element(
-                       self.stat.symbol[ j + self.stat.amount:i ],
-                       self.stat.amount * brackets) )
-
         else:
             self.inside.append(
                 Element(
                     self.stat.symbol[ j:i+1 ],
-                    self.stat.amount * brackets) )
+                    self.stat.amount * brackets) )'''
 
     def coef(self):
         for i in range( len(self.stat.symbol) ):
@@ -142,7 +191,9 @@ class Compound:
         self.analyze()
 
 if __name__ == '__main__':
-    compoundList = [ ]
+    reactants = [ ]
+    products  = [ ]
+    switch    = False
 
     while True:
         print 'Input your BALANCED chemical equation (type \'help\' for help)'
@@ -162,20 +213,38 @@ if __name__ == '__main__':
             break
 
     for i in userInput.split():
+        if i == '->':
+           if switch is True:
+              print 'Repeated syntax %s in userInput.' % i,
+              print 'If you believe this is wrong, report this in the GitHub repo.'
+              exit(-1)
+
+           switch = True
+           continue
         for j in i:
             if j.isalnum() or j in [')', '(']:
-               pass
-            elif j in [' ', '+', '->']:
-                #Exception case ' ', '+', '->'
                 pass
+            #Exception case ' ', '+', '->'
+            elif j == '+':
+                 break
+
             else:
                 print 'Unknown character %c in userInput.' % j,
                 print 'If you believe this is wrong, report this in the GitHub repo.'
-                exit(1)
-
-        compoundList.append( Compound(i) )
+                exit(-1)
+        else:
+             if switch is True:
+                 products.append( Compound(i) )
+                 switch = False
+             else:
+                 reactants.append( Compound(i) )
 
     #debug
-    for i in compoundList:
+    for i in reactants:
+        print 'reactants:'
         for j in i.inside:
-            print j.stat.symbol, j.stat.amount
+            print '%10s, %04d' % (j.stat.symbol, j.stat.amount)
+    for i in products:
+        print 'products:'
+        for j in i.inside:
+            print '%10s, %04d' % (j.stat.symbol, j.stat.amount)
