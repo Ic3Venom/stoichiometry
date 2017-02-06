@@ -66,6 +66,7 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
         j = 0
         bracketAmount  = 1
+        temp = []
 
 		#index slice of what's inside the brackets
         bracketLocation= ()
@@ -74,55 +75,45 @@ class Compound:
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
 
             if self.stat.symbol[i] == '(':
-               bracketLocation = (i+1,)
+				bracketLocation = (i+1,)
 
             elif self.stat.symbol[i] == ')':
-               bracketLocation = bracketLocation + (i,)
+                bracketLocation = bracketLocation + (i,)
 
-               #Checking if there are not enough/too many extra brackets
-               if len(bracketLocation) is not 2:
-                   print 'Missing or too many brackets in userInput.',
-                   print 'If you believe this is wrong, report this in the GitHub repo.'
-                   exit(-1)
+            	#Checking if there are not enough/too many extra brackets
+                if len(bracketLocation) is not 2:
+					print 'Missing or too many brackets in userInput.',
+					print 'If you believe this is wrong, report this in the GitHub repo.'
+					exit(-1)
 
-               for j in range( i + 1, len(self.stat.symbol) ):
-                   if not self.stat.symbol[j].isdecimal():
-                       bracketAmount = int( self.stat.symbol[ bracketLocation[1] + 1:j ] )
-                       print bracketAmount
-                       break
-               else:
-                    bracketAmount = int( self.stat.symbol[i+1:] )
-                    break
-
-        print bracketLocation, self.stat.symbol[bracketLocation[0]:bracketLocation[1]], bracketAmount
-
-		#WILL COMPLETE THIS TOMORROW
-        '''for i in range( len(str(self.stat.amount)), len(self.stat.symbol)):
-
-            if self.stat.symbol[i] == '(':
-                for j in range( i, len(self.stat.symbol) ):
-                    if self.stat.symbol[j] == ')':
-                       brackets = j + 1
-                       break
-
-                #Possibly fixed
-                for j in range( brackets, len(self.stat.symbol) ):
+                for j in range( i + 1, len(self.stat.symbol) ):
                     if not self.stat.symbol[j].isdecimal():
-                       brackets = int( self.stat.symbol[ brackets:j ] )
-                       print brackets
-                       break
+                        bracketAmount = int( self.stat.symbol[ bracketLocation[1] + 1:j ] )
+                        j = 1
+                        break
                 else:
-                     brackets = int( self.stat.symbol[ brackets:len(self.stat.symbol) ] )
-
-        j = 1
+					bracketAmount = int( self.stat.symbol[i+1:] )
+					j = 1
+					break
 
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
-            print i, j,
+            print i, j
 
             #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
-            if not self.stat.symbol[i].isalnum():
+            if self.stat.symbol[i].isupper():
                 print 'if statement 0:', self.stat.symbol[i],
-                if self.stat.symbol[i] == '(':
+
+                if i >= bracketLocation[0] and i <= bracketLocation[1]:
+                    print 'if statement 1:', self.stat.symbol[i]
+                    temp = self.stat.symbol[j:i]
+                    for k in range(j, i):
+                        if k == bracketLocation[0]:
+                            print 'if statement 1.1:', self.stat.symbol[j + len(str(bracketAmount)):k]
+                            self.inside.append(
+                                Element(
+                                    self.stat.symbol[ j:k-1 ],
+                                    self.stat.amount ) )
+                '''if self.stat.symbol[i] == '(':
                     print 'if statement 1:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount - 1: i ]
                     self.inside.append(
                         Element(
