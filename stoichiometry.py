@@ -75,10 +75,10 @@ class Compound:
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
 
             if self.stat.symbol[i] == '(':
-				bracketLocation = (i+1,)
+				bracketLocation = (i,)
 
             elif self.stat.symbol[i] == ')':
-                bracketLocation = bracketLocation + (i,)
+                bracketLocation = bracketLocation + (i-1,)
 
             	#Checking if there are not enough/too many extra brackets
                 if len(bracketLocation) is not 2:
@@ -95,25 +95,39 @@ class Compound:
 					bracketAmount = int( self.stat.symbol[i+1:] )
 					j = 1
 					break
-
+        print 'bracketlocation:', bracketLocation[0], bracketLocation[1]
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
             print i, j
 
             #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
-            if self.stat.symbol[i].isupper():
-                print 'if statement 0:', self.stat.symbol[i],
+            if self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
+                print 'if statement 0:', self.stat.symbol[i]
 
-                if i >= bracketLocation[0] and i <= bracketLocation[1]:
-                    print 'if statement 1:', self.stat.symbol[i]
-                    temp = self.stat.symbol[j:i]
-                    for k in range(j, i):
-                        if k == bracketLocation[0]:
-                            print 'if statement 1.1:', self.stat.symbol[j + len(str(bracketAmount)):k]
-                            self.inside.append(
-                                Element(
-                                    self.stat.symbol[ j:k-1 ],
-                                    self.stat.amount ) )
-                '''if self.stat.symbol[i] == '(':
+                if len( bracketLocation ) > 0:
+                    if i >= bracketLocation[0] and i <= bracketLocation[1]:
+                        print 'if statement 1:', self.stat.symbol[i]
+
+                        temp = self.stat.symbol[j:i]
+
+                        for k in range(j, i):
+                            print 'range', range(j,i)
+                            if k == bracketLocation[0]:
+                                print 'if statement 1.1:', self.stat.symbol[j + len(str(bracketAmount)):k]
+
+                                self.inside.append(
+                                    Element(
+                                        self.stat.symbol[ j:k ],
+                                        self.stat.amount ) )
+
+                                j = i - 1
+                                print 'j:', j
+                                break
+        else:
+            self.inside.append(
+                Element(
+                    self.stat.symbol[ j: ],
+                    self.stat.amount ) )
+            '''if self.stat.symbol[i] == '(':
                     print 'if statement 1:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount - 1: i ]
                     self.inside.append(
                         Element(
@@ -214,11 +228,9 @@ if __name__ == '__main__':
            continue
         for j in i:
             if j.isalnum() or j in [')', '(']:
-                pass
-            #Exception case ' ', '+', '->'
+                continue
             elif j == '+':
                  break
-
             else:
                 print 'Unknown character %c in userInput.' % j,
                 print 'If you believe this is wrong, report this in the GitHub repo.'
