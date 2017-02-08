@@ -25,7 +25,7 @@ class Info:
     def mass(self):
         return self.data[2]
     def name(self):
-		return self.data[3]
+	return self.data[3]
     def amount(self):
         return self.data[4]
 
@@ -87,82 +87,73 @@ class Compound:
 					exit(-1)
 
                 for j in range( i + 1, len(self.stat.symbol) ):
+
                     if not self.stat.symbol[j].isdecimal():
                         bracketAmount = int( self.stat.symbol[ bracketLocation[1] + 1:j ] )
                         j = 1
+
                         break
                 else:
-					bracketAmount = int( self.stat.symbol[i+1:] )
-					j = 1
-					break
-        print 'bracketlocation:', bracketLocation[0], bracketLocation[1]
+                    try:
+                        bracketAmount = int( self.stat.symbol[i+1:] )
+                    except:
+                        bracketAmount = 1
+
+                    j = 1
+                    break
+
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
-            print i, j
 
             #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
             if self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
-                print 'if statement 0:', self.stat.symbol[i]
 
                 if len( bracketLocation ) > 0:
+
                     if i >= bracketLocation[0] and i <= bracketLocation[1]:
-                        print 'if statement 1:', self.stat.symbol[i]
 
-                        temp = self.stat.symbol[j:i]
+                        if j < bracketLocation[0]:
 
-                        for k in range(j, i):
-                            print 'range', range(j,i)
-                            if k == bracketLocation[0]:
-                                print 'if statement 1.1:', self.stat.symbol[j + len(str(bracketAmount)):k]
+                            for k in range(j, i):
 
-                                self.inside.append(
-                                    Element(
-                                        self.stat.symbol[ j:k ],
-                                        self.stat.amount ) )
+                                if k == bracketLocation[0]:
+                                    self.inside.append(
+                                        Element(
+                                            self.stat.symbol[ j:k ],
+                                            self.stat.amount ) )
 
-                                j = i - 1
-                                print 'j:', j
-                                break
+                                    j = i
+                                    break
+
+                        elif i > bracketLocation[1]:
+                            self.inside.append(
+                                Element(
+                                    self.stat.symbol[ j:bracketLocation[1] - 1 ],
+                                    self.stat.symbol * bracketAmount ) )
+
+                            j = i
+
+                        else:
+                            self.inside.append(
+                                Element(
+                                    self.stat.symbol[ j:i ],
+                                    self.stat.amount * bracketAmount ) )
+
+                            j = i
+
         else:
-            self.inside.append(
-                Element(
-                    self.stat.symbol[ j: ],
-                    self.stat.amount ) )
-            '''if self.stat.symbol[i] == '(':
-                    print 'if statement 1:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount - 1: i ]
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol[ j + self.stat.amount - 1:i ],
-                            self.stat.amount * brackets) )
-                elif self.stat.symbol[i] == ')':
-                    print 'if statement 2:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount:i-1 ]
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol[ j + self.stat.amount:i - 1 ],
-                            self.stat.amount * brackets) )
-                    break
-                else:
-                    print 'if statement 3:', j, i, self.stat.amount, self.stat.symbol[ j + self.stat.amount:i]
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol[ j + self.stat.amount:i ],
-                            self.stat.amount * brackets) )
+            if len( bracketLocation ) > 0:
 
-            elif self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
-                print 'if statement 4:', self.stat.symbol[ j + self.stat.amount:i ], j
+                if j <= bracketLocation[1]:
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol[ j:bracketLocation[1]+1 ],
+                            self.stat.amount * bracketAmount ) )
+
+            else:
                 self.inside.append(
                     Element(
-                        self.stat.symbol[ j + self.stat.amount:i ],
-                        self.stat.amount * brackets) )
-                if j == 0:
-                    j = i - 1
-                else:
-                    j = i
-
-        else:
-            self.inside.append(
-                Element(
-                    self.stat.symbol[ j:i+1 ],
-                    self.stat.amount * brackets) )'''
+                        self.stat.symbol[ j: ],
+                        self.stat.amount ) )
 
     def coef(self):
         for i in range( len(self.stat.symbol) ):
@@ -175,12 +166,15 @@ class Compound:
         if not self.stat.symbol[0].isdigit():
             change = '1' + self.stat.symbol
             self.stat.symbol = change
+
             return 1
+
         else:
             return int( self.stat.symbol[0:i] )
 
     def elementLen(self):
         j = 0
+
         for i in self.stat.symbol:
             if i.isupper():
                 j += 1
@@ -226,6 +220,7 @@ if __name__ == '__main__':
 
            switch = True
            continue
+
         for j in i:
             if j.isalnum() or j in [')', '(']:
                 continue
