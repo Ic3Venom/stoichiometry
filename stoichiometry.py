@@ -25,7 +25,7 @@ class Info:
     def mass(self):
         return self.data[2]
     def name(self):
-	return self.data[3]
+		return self.data[3]
     def amount(self):
         return self.data[4]
 
@@ -33,9 +33,18 @@ class Element:
     '''A class to hold element information'''
 
     def amount(self):
-        for i in range( len(self.stat.symbol) ):
-            pass
+        j = 0
+        temp = []
 
+        for i in range( len(self.stat.symbol) ):
+
+            if self.stat.symbol[i].isdecimal():
+                temp = self.stat.symbol[i:]
+                self.stat.symbol = self.stat.symbol[:i]
+                return int(temp)
+        else:
+            self.stat.symbol = self.stat.symbol[:i+1]
+            return 1
 
     def find(self, value):
         '''Finds element in periodictable.txt, returns element mass'''
@@ -45,7 +54,9 @@ class Element:
         maxSearch = self.stat.index(value)
 
         for line in f:
+
             for i in range( maxSearch + 1 ):
+
                 if line.split()[i] == self.stat.symbol():
                     f.close()
                     return line.split()[maxSearch]
@@ -57,7 +68,7 @@ class Element:
     def __init__(self, symbol, totalAmount):
         self.stat = Info()
         self.stat.symbol = symbol
-        self.stat.amount = totalAmount #* self.amount() TODO: UNCOMMENT WHEN USED
+        self.stat.amount = totalAmount * self.amount()
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
@@ -66,7 +77,6 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
         j = 0
         bracketAmount  = 1
-        temp = []
 
 		#index slice of what's inside the brackets
         bracketLocation= ()
@@ -241,7 +251,7 @@ if __name__ == '__main__':
     for i in reactants:
         print 'reactants:'
         for j in i.inside:
-            print '%10s, %04d' % (j.stat.symbol, j.stat.amount)
+            print '%5s, %5d' % (j.stat.symbol, j.stat.amount)
     for i in products:
         print 'products:'
         for j in i.inside:
