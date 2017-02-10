@@ -2,30 +2,17 @@ class Info:
     '''Holds information of Elements and Compounds'''
 
     def __init__(self):
-        #Real names (in order): symbol, number, mass, name, amount
-        self.data = ['', 0, 0.0, '', 0]
-
-    def index(self, value):
-        '''Returns index value of corresponding real name'''
-        try:
-            value.isalpha()
-        except:
-            return value
-
-        j = 0
-        for i in ['symbol', 'number', 'mass', 'name', 'amount']:
-            if i == value:
-                return j
-            j += 1
+        #Real names (in order): symbol, mass, name, number, amount
+        self.data = ['', 0.0, '', 0, 0]
 
     def symbol(self):
         return self.data[0]
-    def number(self):
-        return self.data[1]
     def mass(self):
-        return self.data[2]
+        return self.data[1]
     def name(self):
-		return self.data[3]
+		return self.data[2]
+    def number(self):
+        return self.data[3]
     def amount(self):
         return self.data[4]
 
@@ -46,29 +33,28 @@ class Element:
             self.stat.symbol = self.stat.symbol[:i+1]
             return 1
 
-    def find(self, value):
+    def find(self): #Might revert back to single data return
         '''Finds element in periodictable.txt, returns element mass'''
         f = open('periodictable.txt', 'r')
 
-        value = self.stat.index(value)
-        maxSearch = self.stat.index(value)
-
         for line in f:
 
-            for i in range( maxSearch + 1 ):
+            if line.split()[0] == self.stat.symbol: #line.split()[0] is symbol location
 
-                if line.split()[i] == self.stat.symbol():
-                    f.close()
-                    return line.split()[maxSearch]
+                for term in range( len(line.split()) ):
+                    self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
+                break
+
         else:
             print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
             f.close()
             exit(-1)
 
-    def __init__(self, symbol, totalAmount):
+    def __init__(self, symbol, compoundAmount):
         self.stat = Info()
         self.stat.symbol = symbol
-        self.stat.amount = totalAmount * self.amount()
+        self.stat.amount = compoundAmount * self.amount()
+        self.stat.mass = self.find()
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
@@ -130,8 +116,6 @@ class Compound:
                                         Element(
                                             self.stat.symbol[ j:k ],
                                             self.stat.amount ) )
-
-                                    j = i
                                     break
 
                         elif i > bracketLocation[1]:
@@ -140,15 +124,13 @@ class Compound:
                                     self.stat.symbol[ j:bracketLocation[1] - 1 ],
                                     self.stat.symbol * bracketAmount ) )
 
-                            j = i
-
                         else:
                             self.inside.append(
                                 Element(
                                     self.stat.symbol[ j:i ],
                                     self.stat.amount * bracketAmount ) )
 
-                            j = i
+                        j = i
 
         else:
             if len( bracketLocation ) > 0:
@@ -181,15 +163,6 @@ class Compound:
 
         else:
             return int( self.stat.symbol[0:i] )
-
-    def elementLen(self):
-        j = 0
-
-        for i in self.stat.symbol:
-            if i.isupper():
-                j += 1
-
-        return j
 
     def __init__(self, symbol):
         self.stat = Info()
@@ -251,8 +224,16 @@ if __name__ == '__main__':
     for i in reactants:
         print 'reactants:'
         for j in i.inside:
-            print '%5s, %5d' % (j.stat.symbol, j.stat.amount)
+            print 'r:'
+            print '%10s' % j.stat.data[0]
+            print '%10f'  % j.stat.data[1]
+            print '%10s'% j.stat.data[2]
+            print '%10d' % j.stat.data[3]
     for i in products:
         print 'products:'
         for j in i.inside:
-            print '%10s, %04d' % (j.stat.symbol, j.stat.amount)
+            print 'p:'
+            print '%10s' % j.stat.data[0]
+            print '%10f' % j.stat.data[1]
+            print '%10s' % j.stat.data[2]
+            print '%10d' % j.stat.data[3]
