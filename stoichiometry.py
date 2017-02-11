@@ -10,7 +10,7 @@ class Info:
     def mass(self):
         return self.data[1]
     def name(self):
-		return self.data[2]
+        return self.data[2]
     def number(self):
         return self.data[3]
     def amount(self):
@@ -172,6 +172,26 @@ class Compound:
         self.inside = []
         self.analyze()
 
+def process( reactants, products ):
+    for i in reactants:
+        while True:
+            print 'How many grams of %s are there? (Type ? if value is unknown)' % i
+            userInput = raw_input(">>> ")
+
+            if userInput == '?':
+                continue
+            else:
+                break
+
+    for i in products:
+        while True:
+            print 'How many grams of %s are there? (Type ? if value is unknown)' % i
+            userInput = raw_input(">>> ")
+
+            if userInput == '?':
+                continue
+            else:
+                break
 if __name__ == '__main__':
     reactants = [ ]
     products  = [ ]
@@ -226,8 +246,8 @@ if __name__ == '__main__':
         for j in i.inside:
             print 'r:'
             print '%10s' % j.stat.data[0]
-            print '%10f'  % j.stat.data[1]
-            print '%10s'% j.stat.data[2]
+            print '%10f' % j.stat.data[1]
+            print '%10s' % j.stat.data[2]
             print '%10d' % j.stat.data[3]
     for i in products:
         print 'products:'
@@ -237,3 +257,5 @@ if __name__ == '__main__':
             print '%10f' % j.stat.data[1]
             print '%10s' % j.stat.data[2]
             print '%10d' % j.stat.data[3]
+
+    process( reactants, products )
