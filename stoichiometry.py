@@ -43,18 +43,20 @@ class Element:
 
                 for term in range( len(line.split()) ):
                     self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
+
                 break
 
         else:
             print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
             f.close()
-            exit(-1)
+            exit(1)
 
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
+
         self.stat.symbol = symbol
         self.stat.amount = compoundAmount * self.amount()
-        self.stat.mass = self.find()
+        self.find()
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
@@ -62,10 +64,8 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
         j = 0
-        bracketAmount  = 1
-
-		#index slice of what's inside the brackets
-        bracketLocation= ()
+        bracketAmount = 1
+        bracketLocation= () #index slice of what's inside the brackets
 
         #Finds where the brackets are located and what amount is assigned to them
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
@@ -80,7 +80,7 @@ class Compound:
                 if len(bracketLocation) is not 2:
 					print 'Missing or too many brackets in userInput.',
 					print 'If you believe this is wrong, report this in the GitHub repo.'
-					exit(-1)
+					exit(1)
 
                 for j in range( i + 1, len(self.stat.symbol) ):
 
@@ -164,39 +164,27 @@ class Compound:
         else:
             return int( self.stat.symbol[0:i] )
 
+    def mass(self):
+        self.stat.mass = 0
+        for i in self.inside:
+            self.stat.mass += i.stat.data[1]
+
     def __init__(self, symbol):
         self.stat = Info()
         self.stat.symbol = symbol
         self.stat.amount = self.coef()
 
         self.inside = []
+
         self.analyze()
+        self.mass()
 
-def process( reactants, products ):
-    for i in reactants:
-        while True:
-            print 'How many grams of %s are there? (Type ? if value is unknown)' % i
-            userInput = raw_input(">>> ")
-
-            if userInput == '?':
-                continue
-            else:
-                break
-
-    for i in products:
-        while True:
-            print 'How many grams of %s are there? (Type ? if value is unknown)' % i
-            userInput = raw_input(">>> ")
-
-            if userInput == '?':
-                continue
-            else:
-                break
-if __name__ == '__main__':
+def main():
     reactants = [ ]
     products  = [ ]
     switch    = False
 
+    #Phase 1: read input and check for commands
     while True:
         print 'Input your BALANCED chemical equation (type \'help\' for help)'
         userInput = raw_input(">>> ")
@@ -210,16 +198,17 @@ if __name__ == '__main__':
             print '* P: Products (any order, separated by the syntax, \' +  \'(space plus space)'
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
         elif userInput == 'quit':
-            exit(1)
+            exit(0)
         else:
             break
 
+    #Phase 2: read input and put compounds into list(reactants) or list(products)
     for i in userInput.split():
         if i == '->':
            if switch is True:
               print 'Repeated syntax %s in userInput.' % i,
               print 'If you believe this is wrong, report this in the GitHub repo.'
-              exit(-1)
+              exit(1)
 
            switch = True
            continue
@@ -232,15 +221,21 @@ if __name__ == '__main__':
             else:
                 print 'Unknown character %c in userInput.' % j,
                 print 'If you believe this is wrong, report this in the GitHub repo.'
-                exit(-1)
+                exit(1)
         else:
              if switch is True:
                  products.append( Compound(i) )
                  switch = False
+
              else:
                  reactants.append( Compound(i) )
 
-    #debug
+    #Phase 3: compounds have their weight added up
+    for i in reactants:
+        print i.stat.mass
+    for i in products:
+        print i.stat.mass
+
     for i in reactants:
         print 'reactants:'
         for j in i.inside:
@@ -258,4 +253,7 @@ if __name__ == '__main__':
             print '%10s' % j.stat.data[2]
             print '%10d' % j.stat.data[3]
 
-    process( reactants, products )
+if __name__ == '__main__':
+    main()
+
+    exit(0)
