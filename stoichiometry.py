@@ -175,6 +175,7 @@ class Compound:
         self.stat.amount = self.coef()
 
         self.inside = []
+        self.massInput = 0.0
 
         self.analyze()
         self.mass()
@@ -230,13 +231,19 @@ def main():
              else:
                  reactants.append( Compound(i) )
 
-    #Phase 3: compounds have their weight added up
-    for i in reactants:
-        print i.stat.mass
-    for i in products:
-        print i.stat.mass
+    #Phase 3: userInput of each componud's mass
+    for i in reactants + products:
+        print 'How many grams of %s are in the reaction? (Type \'?\' if value is unknown' % i.stat.symbol
+        userInput = raw_input(">>>")
 
+        if userInput == '?':
+            continue
+        else:
+            i.stat.massInput = raw_input(">>>") #Would like to rename variable
+
+    #debug
     for i in reactants:
+        print i.massInput
         print 'reactants:'
         for j in i.inside:
             print 'r:'
@@ -245,6 +252,7 @@ def main():
             print '%10s' % j.stat.data[2]
             print '%10d' % j.stat.data[3]
     for i in products:
+        print i.massInput
         print 'products:'
         for j in i.inside:
             print 'p:'
