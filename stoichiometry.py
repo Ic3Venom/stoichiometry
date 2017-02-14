@@ -233,18 +233,18 @@ def main():
 
     #Phase 3: userInput of each componud's mass
     for i in reactants + products:
+        print i
         print 'How many grams of %s are in the reaction? (Type \'?\' if value is unknown' % i.stat.symbol
-        userInput = raw_input(">>>")
 
         if userInput == '?':
             continue
         else:
-            i.stat.massInput = raw_input(">>>") #Would like to rename variable
+            i.massInput = float(raw_input(">>>")) #Would like to rename variable
 
     #debug
     for i in reactants:
-        print i.massInput
         print 'reactants:'
+        print '%10f' % i.massInput
         for j in i.inside:
             print 'r:'
             print '%10s' % j.stat.data[0]
