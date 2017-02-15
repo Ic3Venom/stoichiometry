@@ -23,7 +23,7 @@ class Element:
         j = 0
         temp = []
 
-        for i in range( len(self.stat.symbol) ):
+        for i in range(1, len(self.stat.symbol) ):
 
             if self.stat.symbol[i].isdecimal():
                 temp = self.stat.symbol[i:]
@@ -39,7 +39,7 @@ class Element:
 
         for line in f:
 
-            if line.split()[0] == self.stat.symbol: #line.split()[0] is symbol location
+            if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
 
                 for term in range( len(line.split()) ):
                     self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
