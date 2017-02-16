@@ -180,7 +180,23 @@ class Compound:
         self.analyze()
         self.mass()
 
-def main():
+def emperical():
+    reactants    = [ ]
+    empValSwitch = False
+    while True:
+        print 'SOMETHING ELSE (type \'help\' for help)'
+        userInput = raw_input(">>> ")
+
+        if userInput == 'help':
+            print '\nWelcome to the stoichiometry.py help page!\n'
+            print 'The expected input for this program is as follows:'
+            print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
+        elif userInput == 'quit':
+            exit(0)
+        else:
+            break
+
+def limiting():
     reactants = [ ]
     products  = [ ]
     switch    = False
@@ -260,6 +276,27 @@ def main():
             print '%10f' % j.stat.data[1]
             print '%10s' % j.stat.data[2]
             print '%10d' % j.stat.data[3]
+
+def main():
+    #Phase 1: read input and check for commands
+    while True:
+        print 'What mode of stoichiometry would you like to do? (type \'help\' for help)'
+        userInput = raw_input(">>> ")
+
+        if userInput.lower() == 'help':
+            print '\nWelcome to the stoichiometry.py help page!\n'
+            print 'For empirical/molecular formula, type \'emperical\' or \'molecular\''
+            print 'For limiting reactant solver, type \'limiting\''
+            print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
+
+        elif userInput.lower() == 'quit':
+            exit(0)
+
+        elif userInput.lower() == ['emperical', 'emp', 'molecular', 'mol']:
+            emperical()
+
+        elif userInput.lower() in ['limiting', 'lim']:
+            limiting()
 
 if __name__ == '__main__':
     main()
