@@ -180,16 +180,18 @@ class Compound:
         self.analyze()
         self.mass()
 
-def emperical():
+def empirical():
     reactants    = [ ]
     empValSwitch = False
     while True:
-        print 'SOMETHING ELSE (type \'help\' for help)'
+        print 'Enter your list of percent amounts of elements (type \'help\' for help)'
         userInput = raw_input(">>> ")
 
         if userInput == 'help':
             print '\nWelcome to the stoichiometry.py help page!\n'
             print 'The expected input for this program is as follows:'
+            print '* %DECIMAL SYMBOL, %DECMIMAL SYMBOL, etc.'
+            print 'Where \'%DECIMAL\' is AT MOST in the thousandths place.'
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
         elif userInput == 'quit':
             exit(0)
@@ -203,7 +205,7 @@ def limiting():
 
     #Phase 1: read input and check for commands
     while True:
-        print 'Input your BALANCED chemical equation (type \'help\' for help)'
+        print 'Enter your BALANCED chemical equation (type \'help\' for help)'
         userInput = raw_input(">>> ")
 
         if userInput == 'help':
@@ -218,7 +220,7 @@ def limiting():
             exit(0)
         else:
             break
-
+    print userInput
     #Phase 2: read input and put compounds into list(reactants) or list(products)
     for i in userInput.split():
         if i == '->':
@@ -255,7 +257,7 @@ def limiting():
         if userInput == '?':
             continue
         else:
-            i.massInput = float(raw_input(">>>")) #Would like to rename variable
+            i.massInput = float( raw_input(">>>") ) #Would like to rename variable
 
     #debug
     for i in reactants:
@@ -285,15 +287,15 @@ def main():
 
         if userInput.lower() == 'help':
             print '\nWelcome to the stoichiometry.py help page!\n'
-            print 'For empirical/molecular formula, type \'emperical\' or \'molecular\''
+            print 'For empirical/molecular formula, type \'empirical\' or \'molecular\''
             print 'For limiting reactant solver, type \'limiting\''
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
 
         elif userInput.lower() == 'quit':
             exit(0)
 
-        elif userInput.lower() == ['emperical', 'emp', 'molecular', 'mol']:
-            emperical()
+        elif userInput.lower() in ['empirical', 'emp', 'molecular', 'mol']:
+            empirical()
 
         elif userInput.lower() in ['limiting', 'lim']:
             limiting()
