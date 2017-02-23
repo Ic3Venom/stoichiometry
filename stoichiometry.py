@@ -20,9 +20,6 @@ class Element:
     '''A class to hold element information'''
 
     def amount(self):
-        j = 0
-        temp = []
-
         for i in range(1, len(self.stat.symbol) ):
 
             if self.stat.symbol[i].isdecimal():
@@ -35,21 +32,20 @@ class Element:
 
     def find(self): #Might revert back to single data return
         '''Finds element in periodictable.txt, returns element mass'''
-        f = open('periodictable.txt', 'r')
+        with open('periodictable.txt', 'r') as f:
+            for line in f:
 
-        for line in f:
+                if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
 
-            if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
+                    for term in range( len(line.split()) ):
+                        self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
 
-                for term in range( len(line.split()) ):
-                    self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
+                    break
 
-                break
-
-        else:
-            print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
-            f.close()
-            exit(1)
+            else:
+                print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
+                f.close()
+                exit(1)
 
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
@@ -64,7 +60,7 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
         j = 0
-        bracketAmount = 1
+        bracketAmount  = 1
         bracketLocation= () #index slice of what's inside the brackets
 
         #Finds where the brackets are located and what amount is assigned to them
@@ -183,6 +179,7 @@ class Compound:
 def empirical():
     reactants    = [ ]
     empValSwitch = False
+
     while True:
         print 'Enter your list of percent amounts of elements (type \'help\' for help)'
         userInput = raw_input(">>> ")
@@ -190,13 +187,16 @@ def empirical():
         if userInput == 'help':
             print '\nWelcome to the stoichiometry.py help page!\n'
             print 'The expected input for this program is as follows:'
-            print '* %DECIMAL SYMBOL, %DECMIMAL SYMBOL, etc.'
-            print 'Where \'%DECIMAL\' is AT MOST in the thousandths place.'
+            print '* MASS SYMBOL, MASS SYMBOL, ...'
+            print 'Where \'MASS\' is AT MOST in the thousandths place.'
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
         elif userInput == 'quit':
             exit(0)
         else:
             break
+    #TODO: finish stuff!
+    for i in userInput.split():
+        print i
 
 def limiting():
     reactants = [ ]
