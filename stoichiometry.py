@@ -32,7 +32,7 @@ class Element:
 
     def find(self): #Might revert back to single data return
         '''Finds element in periodictable.txt, returns element mass'''
-        with open('periodictable.txt', 'r') as f:
+        with file('periodictable.txt', 'rb') as f:
             for line in f:
 
                 if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
