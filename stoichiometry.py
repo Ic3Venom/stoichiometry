@@ -179,6 +179,7 @@ class Compound:
 def empirical():
     reactants    = [ ]
     empValSwitch = False
+    i = 0
 
     while True:
         print 'Enter your list of percent amounts of elements (type \'help\' for help)'
@@ -195,8 +196,18 @@ def empirical():
         else:
             break
     #TODO: finish stuff!
-    for i in userInput.split():
-        print i
+    while i < len( userInput.split() ):
+        try:
+            reactants.append(
+                (userInput.split()[i], userInput.split()[i + 1]) )
+        except:
+            print 'Not enough information to solve the problem.',
+            print 'If you believe this is wrong, report this in the GitHub repo.'
+            exit(0)
+
+        i += 2
+    print reactants
+
 
 def limiting():
     reactants = [ ]
@@ -296,9 +307,11 @@ def main():
 
         elif userInput.lower() in ['empirical', 'emp', 'molecular', 'mol']:
             empirical()
+            break
 
         elif userInput.lower() in ['limiting', 'lim']:
             limiting()
+            break
 
 if __name__ == '__main__':
     main()
