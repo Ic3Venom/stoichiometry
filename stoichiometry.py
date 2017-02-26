@@ -31,8 +31,8 @@ class Element:
             return 1
 
     def find(self): #Might revert back to single data return
-        '''Finds element in periodictable.txt, returns element mass'''
-        with file('periodictable.txt', 'rb') as f:
+        '''Finds element in table.bin, returns element mass'''
+        with file('table.bin', 'rb') as f:
             for line in f:
 
                 if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
@@ -177,8 +177,8 @@ class Compound:
         self.mass()
 
 def empirical():
-    reactants    = [ ]
-    empValSwitch = False
+    storage = [ ]
+    switch  = False
     i = 0
 
     while True:
@@ -195,18 +195,25 @@ def empirical():
             exit(0)
         else:
             break
+
     #TODO: finish stuff!
     while i < len( userInput.split() ):
+        print userInput, i, len(userInput.split()), ' ', userInput.split()[i]
+        wow = Compound(userInput.split()[i])
+        print wow.stat.symbol
         try:
-            reactants.append(
-                (userInput.split()[i], userInput.split()[i + 1]) )
+            storage.append(
+                (Compound(
+                    userInput.split()[i] ),
+                userInput.split()[i + 1] ) )
+            print type(storage)
         except:
             print 'Not enough information to solve the problem.',
             print 'If you believe this is wrong, report this in the GitHub repo.'
             exit(0)
 
         i += 2
-    print reactants
+    print storage
 
 
 def limiting():
