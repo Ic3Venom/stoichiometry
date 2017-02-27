@@ -178,8 +178,6 @@ class Compound:
 
 def empirical():
     storage = [ ]
-    switch  = False
-    i = 0
 
     while True:
         print 'Enter your list of percent amounts of elements (type \'help\' for help)'
@@ -197,24 +195,18 @@ def empirical():
             break
 
     #TODO: finish stuff!
-    while i < len( userInput.split() ):
-        print userInput, i, len(userInput.split()), ' ', userInput.split()[i]
-        wow = Compound(userInput.split()[i])
-        print wow.stat.symbol
+    for i in userInput.split(','):
         try:
             storage.append(
                 (Compound(
-                    userInput.split()[i] ),
-                userInput.split()[i + 1] ) )
-            print type(storage)
+                    i.split()[0] ),
+                i.split()[1] ) )
+
         except:
-            print 'Not enough information to solve the problem.',
+            print 'Incorrect syntax in userInput.',
             print 'If you believe this is wrong, report this in the GitHub repo.'
             exit(0)
-
-        i += 2
     print storage
-
 
 def limiting():
     reactants = [ ]
@@ -241,6 +233,7 @@ def limiting():
     print userInput
     #Phase 2: read input and put compounds into list(reactants) or list(products)
     for i in userInput.split():
+
         if i == '->':
            if switch is True:
               print 'Repeated syntax %s in userInput.' % i,
