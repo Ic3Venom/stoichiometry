@@ -59,7 +59,7 @@ class Compound:
 
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
-        j = 0
+        '''j = 0
         bracketAmount  = 1
         bracketLocation= () #index slice of what's inside the brackets
 
@@ -67,10 +67,10 @@ class Compound:
         for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
 
             if self.stat.symbol[i] == '(':
-				bracketLocation = (i,)
+				bracketLocation += (i,)
 
             elif self.stat.symbol[i] == ')':
-                bracketLocation = bracketLocation + (i-1,)
+                bracketLocation += (i-1,)
 
             	#Checking if there are not enough/too many extra brackets
                 if len(bracketLocation) is not 2:
@@ -141,7 +141,7 @@ class Compound:
                 self.inside.append(
                     Element(
                         self.stat.symbol[ j: ],
-                        self.stat.amount ) )
+                        self.stat.amount ) )'''
 
     def coef(self):
         for i in range( len(self.stat.symbol) ):
@@ -200,13 +200,12 @@ def empirical():
             storage.append(
                 (Compound(
                     i.split()[0] ),
-                i.split()[1] ) )
+                int( i.split()[1] )) )
 
         except:
             print 'Incorrect syntax in userInput.',
             print 'If you believe this is wrong, report this in the GitHub repo.'
             exit(0)
-    print storage
 
 def limiting():
     reactants = [ ]
@@ -314,6 +313,9 @@ def main():
             break
 
 if __name__ == '__main__':
-    main()
+    test = Compound( raw_input("Compound: ") )
+    print test.stat.data
+
+    #main() need to work on Compound.analyze() more
 
     exit(0)
