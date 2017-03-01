@@ -59,6 +59,18 @@ class Compound:
 
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
+
+        j = 0
+        for i in range( len( str( self.stat.amount)), len(self.stat.symbol) ):
+            #Parameters needed to interpret:
+            '''
+                1. Parenthesis, one pair at most at one time
+                2. Coeffecients
+                3. Amount of an element/compound
+                4. Capital Letters start a compound
+                5. lower case letters are part of the last capital letter
+            '''
+            pass
         '''j = 0
         bracketAmount  = 1
         bracketLocation= () #index slice of what's inside the brackets
