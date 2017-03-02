@@ -62,6 +62,15 @@ class Compound:
 
         j = 0
         for i in range( len( str( self.stat.amount)), len(self.stat.symbol) ):
+            if i.isupper(): #Parameter 4
+                pass
+            elif i == '(':  #P1
+                pass
+            elif i == ')':  #P1
+                pass
+            else:           #P3
+                pass
+
             #Parameters needed to interpret:
             '''
                 1. Parenthesis, one pair at most at one time
