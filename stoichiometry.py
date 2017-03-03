@@ -61,16 +61,31 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = 0
+        brackets = ()
         for i in range( len( str( self.stat.amount)), len(self.stat.symbol) ):
-            if i.isupper(): #Parameter 4
+            if self.stat.symbol[i].isupper(): #Parameter 4
                 pass
-            elif i == '(':  #P1
+            elif self.stat.symbol[i] == '(':  #P1
+                if not len(brackets) == 0:
+                    print 'Too many \'\\\' brackets in userInput. Exiting program',
+                    print 'If you believe this is wrong, report this in the GitHub repo.'
+                    exit(1)
+                else:
+                    brackets += (i,)
+            elif self.stat.symbol[i] == ')':  #P1
+                if not len(brackets) == 1:
+                    print 'Missing brackets in userInput. Exiting program',
+                    print 'If you believe this is wrong, report this in the GitHub repo.'
+                    exit(1)
+                else:
+                    brackets += (i,)
+                    for j in range( i, len(self.stat.symbol)):
+                        if not self.stat.symbol[j].isdigit():
+                            brackets += ( int( self.stat.symbol[i:j+1]), )
+                            break
+            else:
                 pass
-            elif i == ')':  #P1
-                pass
-            else:           #P3
-                pass
-
+            print 'Compound.analyze() status: %r', brackets
             #Parameters needed to interpret:
             '''
                 1. Parenthesis, one pair at most at one time
@@ -224,7 +239,7 @@ def empirical():
                 int( i.split()[1] )) )
 
         except:
-            print 'Incorrect syntax in userInput.',
+            print 'Incorrect syntax in userInput. Exiting program.',
             print 'If you believe this is wrong, report this in the GitHub repo.'
             exit(0)
 
