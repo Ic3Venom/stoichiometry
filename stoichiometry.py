@@ -67,7 +67,7 @@ class Compound:
                 pass
             elif self.stat.symbol[i] == '(':  #P1
                 if not len(brackets) == 0:
-                    print 'Too many \'\\\' brackets in userInput. Exiting program',
+                    print 'Too many \'\(\' brackets in userInput. Exiting program',
                     print 'If you believe this is wrong, report this in the GitHub repo.'
                     exit(1)
                 else:
@@ -78,23 +78,12 @@ class Compound:
                     print 'If you believe this is wrong, report this in the GitHub repo.'
                     exit(1)
                 else:
-                    brackets += (i,)
-                    for j in range( i, len(self.stat.symbol)):
-                        if not self.stat.symbol[j].isdigit():
-                            brackets += ( int( self.stat.symbol[i:j+1]), )
-                            break
+                    brackets += (i, int( self.stat.symbol[i+1:]), )
             else:
                 pass
-            print 'Compound.analyze() status: %r', brackets
-            #Parameters needed to interpret:
-            '''
-                1. Parenthesis, one pair at most at one time
-                2. Coeffecients
-                3. Amount of an element/compound
-                4. Capital Letters start a compound
-                5. lower case letters are part of the last capital letter
-            '''
-            pass
+
+        print 'Compound.analyze() status: %r', brackets
+
         '''j = 0
         bracketAmount  = 1
         bracketLocation= () #index slice of what's inside the brackets
@@ -265,7 +254,7 @@ def limiting():
             exit(0)
         else:
             break
-    print userInput
+
     #Phase 2: read input and put compounds into list(reactants) or list(products)
     for i in userInput.split():
 
@@ -302,6 +291,7 @@ def limiting():
 
         if userInput == '?':
             continue
+
         else:
             i.massInput = float( raw_input(">>>") ) #Would like to rename variable
 
