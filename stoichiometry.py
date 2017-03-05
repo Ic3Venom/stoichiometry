@@ -27,7 +27,7 @@ class Element:
                 self.stat.symbol = self.stat.symbol[:i]
                 return int(temp)
         else:
-            self.stat.symbol = self.stat.symbol[:i+1]
+            #self.stat.symbol = self.stat.symbol[:i+1] run error, need to check why
             return 1
 
     def find(self): #Might revert back to single data return
@@ -60,18 +60,32 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
-        j = 0
+        j = len( str( self.stat.amount ) )
         brackets = ()
-        for i in range( len( str( self.stat.amount)), len(self.stat.symbol) ):
+        for i in range( len( str( self.stat.amount) ) + 1, len(self.stat.symbol) ):
+            print self.inside
             if self.stat.symbol[i].isupper(): #Parameter 4
-                pass
+                self.inside.append(
+                    Element(
+                        self.stat.symbol[j:i],
+                        self.stat.amount ) )
+
             elif self.stat.symbol[i] == '(':  #P1
+                if not j == i: #If not first char after total amount is '(', append another compound
+                    print 'hi'
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol[j:i-1],
+                            self.stat.amount ) )
+                    j = i + 1
+
                 if not len(brackets) == 0:
                     print 'Too many \'\(\' brackets in userInput. Exiting program',
                     print 'If you believe this is wrong, report this in the GitHub repo.'
                     exit(1)
                 else:
                     brackets += (i,)
+
             elif self.stat.symbol[i] == ')':  #P1
                 if not len(brackets) == 1:
                     print 'Missing brackets in userInput. Exiting program',
@@ -79,10 +93,11 @@ class Compound:
                     exit(1)
                 else:
                     brackets += (i, int( self.stat.symbol[i+1:]), )
+
             else:
                 pass
 
-        print 'Compound.analyze() status: %r', brackets
+        print 'Compound.analyze() status: %r, %r' % (brackets, self.inside)
 
         '''j = 0
         bracketAmount  = 1
