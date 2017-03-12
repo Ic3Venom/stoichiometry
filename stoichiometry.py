@@ -20,19 +20,19 @@ class Element:
     '''A class to hold element information'''
 
     def amount(self):
+        print 'symbol', self.stat.symbol
         for i in range(1, len(self.stat.symbol) ):
-
-            if self.stat.symbol[i].isdecimal():
-                temp = self.stat.symbol[i:]
-                self.stat.symbol = self.stat.symbol[:i]
-                return int(temp)
-        else:
-            #self.stat.symbol = self.stat.symbol[:i+1] run error, need to check why
+            if not self.stat.symbol[i].isdecimal():
+                return self.stat.symbol[:i]
+        else:   #if len(self.stat.symbol) is 1, default amount to 1
+            self.stat.symbol = '1' + self.stat.symbol
+            print 'else:', self.stat.symbol
             return 1
+
 
     def find(self): #Might revert back to single data return
         '''Finds element in table.bin, returns element mass'''
-        with file('table.bin', 'rb') as f:
+        with open('table.bin', 'rb') as f:
             for line in f:
 
                 if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
@@ -357,6 +357,6 @@ if __name__ == '__main__':
     test = Compound( raw_input("Compound: ") )
     print test.stat.data
 
-    #main() need to work on Compound.analyze() more
+    #main() *need to work on Compound.analyze() more
 
     exit(0)
