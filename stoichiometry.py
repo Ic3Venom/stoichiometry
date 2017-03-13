@@ -62,9 +62,9 @@ class Compound:
 
         j = len( str( self.stat.amount ) )
         brackets = ()
-        for i in range( len( str( self.stat.amount) ) + 1, len(self.stat.symbol) ):
+        for i in range( len( str( self.stat.amount) ), len(self.stat.symbol) ):
             print self.inside
-            if self.stat.symbol[i].isupper(): #Parameter 4
+            if self.stat.symbol[i].isupper() and (i != len( str( self.stat.amount))): #Parameter 4
                 self.inside.append(
                     Element(
                         self.stat.symbol[j:i],
@@ -95,9 +95,16 @@ class Compound:
                     brackets += (i, int( self.stat.symbol[i+1:]), )
 
             else:
+                print 'hi'
                 pass
+        else:
+            self.inside.append(
+                Element(
+                    self.stat.symbol[i:],
+                    self.stat.amount ) )
 
         print 'Compound.analyze() status: %r, %r' % (brackets, self.inside)
+        print self.inside[0].stat.symbol, self.inside[0].stat.amount
 
         '''j = 0
         bracketAmount  = 1
