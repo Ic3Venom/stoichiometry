@@ -21,12 +21,13 @@ class Element:
 
     def amount(self):
         print 'symbol', self.stat.symbol
-        for i in range(1, len(self.stat.symbol) ):
-            if not self.stat.symbol[i].isdecimal():
-                return self.stat.symbol[:i]
-        else:   #if len(self.stat.symbol) is 1, default amount to 1
-            self.stat.symbol = '1' + self.stat.symbol
-            print 'else:', self.stat.symbol
+        for i in range(len(self.stat.symbol) ):
+            if not self.stat.symbol[i].isalpha():
+                temp = self.stat.symbol[i:]
+                self.stat.symbol = self.stat.symbol[:i]
+                return temp
+        else:   #if self.stat.symbol has no amount attached, defaults to 1
+            self.stat.symbol = self.stat.symbol[:i]
             return 1
 
 
@@ -51,6 +52,7 @@ class Element:
         self.stat = Info()
 
         self.stat.symbol = symbol
+        del symbol
         self.stat.amount = compoundAmount * self.amount()
         self.find()
 
@@ -61,6 +63,7 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount ) )
+
         brackets = ()
         for i in range( len( str( self.stat.amount) ), len(self.stat.symbol) ):
             print self.inside
@@ -100,7 +103,7 @@ class Compound:
         else:
             self.inside.append(
                 Element(
-                    self.stat.symbol[i:],
+                    self.stat.symbol[j:],
                     self.stat.amount ) )
 
         print 'Compound.analyze() status: %r, %r' % (brackets, self.inside)
