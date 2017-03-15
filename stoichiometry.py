@@ -20,10 +20,9 @@ class Element:
     '''A class to hold element information'''
 
     def amount(self):
-        print 'symbol', self.stat.symbol
         for i in range(len(self.stat.symbol) ):
             if not self.stat.symbol[i].isalpha():
-                temp = self.stat.symbol[i:]
+                temp = int(self.stat.symbol[i:])
                 self.stat.symbol = self.stat.symbol[:i]
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1
@@ -33,14 +32,14 @@ class Element:
 
     def find(self): #Might revert back to single data return
         '''Finds element in table.bin, returns element mass'''
+
         with open('table.bin', 'rb') as f:
             for line in f:
 
-                if line.split()[0] == self.stat.symbol[len(str(self.stat.amount)):]: #line.split()[0] is symbol location
+                if line.split()[0] == self.stat.symbol: #line.split()[0] is symbol location
 
                     for term in range( len(line.split()) ):
                         self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
-
                     break
 
             else:
@@ -53,7 +52,10 @@ class Element:
 
         self.stat.symbol = symbol
         del symbol
+
         self.stat.amount = compoundAmount * self.amount()
+        print 'Element<__init__> self.stat.symbol:', self.stat.symbol, self.stat.amount
+
         self.find()
 
 class Compound:
@@ -66,16 +68,17 @@ class Compound:
 
         brackets = ()
         for i in range( len( str( self.stat.amount) ), len(self.stat.symbol) ):
-            print self.inside
             if self.stat.symbol[i].isupper() and (i != len( str( self.stat.amount))): #Parameter 4
+                print 'Compound<analyze>for;if1:', i, j
                 self.inside.append(
                     Element(
                         self.stat.symbol[j:i],
                         self.stat.amount ) )
+                j = i
+
 
             elif self.stat.symbol[i] == '(':  #P1
                 if not j == i: #If not first char after total amount is '(', append another compound
-                    print 'hi'
                     self.inside.append(
                         Element(
                             self.stat.symbol[j:i-1],
@@ -97,9 +100,6 @@ class Compound:
                 else:
                     brackets += (i, int( self.stat.symbol[i+1:]), )
 
-            else:
-                print 'hi'
-                pass
         else:
             self.inside.append(
                 Element(
@@ -108,90 +108,6 @@ class Compound:
 
         print 'Compound.analyze() status: %r, %r' % (brackets, self.inside)
         print self.inside[0].stat.symbol, self.inside[0].stat.amount
-
-        '''j = 0
-        bracketAmount  = 1
-        bracketLocation= () #index slice of what's inside the brackets
-
-        #Finds where the brackets are located and what amount is assigned to them
-        for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
-
-            if self.stat.symbol[i] == '(':
-				bracketLocation += (i,)
-
-            elif self.stat.symbol[i] == ')':
-                bracketLocation += (i-1,)
-
-            	#Checking if there are not enough/too many extra brackets
-                if len(bracketLocation) is not 2:
-					print 'Missing or too many brackets in userInput.',
-					print 'If you believe this is wrong, report this in the GitHub repo.'
-					exit(1)
-
-                for j in range( i + 1, len(self.stat.symbol) ):
-
-                    if not self.stat.symbol[j].isdecimal():
-                        bracketAmount = int( self.stat.symbol[ bracketLocation[1] + 1:j ] )
-                        j = 1
-
-                        break
-                else:
-                    try:
-                        bracketAmount = int( self.stat.symbol[i+1:] )
-                    except:
-                        bracketAmount = 1
-
-                    j = 1
-                    break
-
-        for i in range( len(str(self.stat.amount)), len(self.stat.symbol) ):
-
-            #If i.isupper(): insideAmount.append(self.stat.symbol[slice])
-            if self.stat.symbol[i].isupper() and not i == len(str(self.stat.amount)):
-
-                if len( bracketLocation ) > 0:
-
-                    if i >= bracketLocation[0] and i <= bracketLocation[1]:
-
-                        if j < bracketLocation[0]:
-
-                            for k in range(j, i):
-
-                                if k == bracketLocation[0]:
-                                    self.inside.append(
-                                        Element(
-                                            self.stat.symbol[ j:k ],
-                                            self.stat.amount ) )
-                                    break
-
-                        elif i > bracketLocation[1]:
-                            self.inside.append(
-                                Element(
-                                    self.stat.symbol[ j:bracketLocation[1] - 1 ],
-                                    self.stat.symbol * bracketAmount ) )
-
-                        else:
-                            self.inside.append(
-                                Element(
-                                    self.stat.symbol[ j:i ],
-                                    self.stat.amount * bracketAmount ) )
-
-                        j = i
-
-        else:
-            if len( bracketLocation ) > 0:
-
-                if j <= bracketLocation[1]:
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol[ j:bracketLocation[1]+1 ],
-                            self.stat.amount * bracketAmount ) )
-
-            else:
-                self.inside.append(
-                    Element(
-                        self.stat.symbol[ j: ],
-                        self.stat.amount ) )'''
 
     def coef(self):
         for i in range( len(self.stat.symbol) ):
