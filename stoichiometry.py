@@ -26,9 +26,7 @@ class Element:
                 self.stat.symbol = self.stat.symbol[:i]
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1
-            self.stat.symbol = self.stat.symbol[:i]
             return 1
-
 
     def find(self): #Might revert back to single data return
         '''Finds element in table.bin, returns element mass'''
@@ -49,7 +47,7 @@ class Element:
 
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
-
+        print 'symbol', symbol
         self.stat.symbol = symbol
         del symbol
 
@@ -116,7 +114,7 @@ class Compound:
             if not currentChar.isdigit():
                 break
 
-        #if Compound has no coefficent, amount defaults to 1
+        #if Compound has no coefficient, amount defaults to 1
         if not self.stat.symbol[0].isdigit():
             change = '1' + self.stat.symbol
             self.stat.symbol = change
@@ -150,10 +148,10 @@ def empirical():
         userInput = raw_input(">>> ")
 
         if userInput == 'help':
-            print '\nWelcome to the stoichiometry.py help page!\n'
-            print 'The expected input for this program is as follows:'
-            print '* MASS SYMBOL, MASS SYMBOL, ...'
-            print 'Where \'MASS\' is AT MOST in the thousandths place.'
+            print '\nWelcome to the stoichiometry.py help page!'
+            print '* The expected input for this program is as follows:'
+            print '\tMASS SYMBOL, MASS SYMBOL, ...'
+            print '* Where \'MASS\' is AT MOST in the thousandths place.'
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
         elif userInput == 'quit':
             exit(0)
@@ -200,32 +198,32 @@ def limiting():
     for i in userInput.split():
 
         if i == '->':
-           if switch is True:
-              print 'Repeated syntax %s in userInput.' % i,
-              print 'If you believe this is wrong, report this in the GitHub repo.'
-              exit(1)
+            if switch is True:
+                print 'Repeated syntax %s in userInput.' % i,
+                print 'If you believe this is wrong, report this in the GitHub repo.'
+                exit(1)
 
-           switch = True
-           continue
+            switch = True
+            continue
 
         for j in i:
             if j.isalnum() or j in [')', '(']:
                 continue
             elif j == '+':
-                 break
+                break
             else:
                 print 'Unknown character %c in userInput.' % j,
                 print 'If you believe this is wrong, report this in the GitHub repo.'
                 exit(1)
         else:
-             if switch is True:
-                 products.append( Compound(i) )
-                 switch = False
+            if switch is True:
+                products.append( Compound(i) )
+                switch = False
 
-             else:
-                 reactants.append( Compound(i) )
+            else:
+                reactants.append( Compound(i) )
 
-    #Phase 3: userInput of each componud's mass
+    #Phase 3: userInput of each compound's mass
     for i in reactants + products:
         print i
         print 'How many grams of %s are in the reaction? (Type \'?\' if value is unknown' % i.stat.symbol
