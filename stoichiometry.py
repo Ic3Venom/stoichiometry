@@ -63,9 +63,11 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount ) )
-
         brackets = ()
+        
         for i in range( len( str( self.stat.amount) ), len(self.stat.symbol) ):
+            print 'Compound<analyze>for;start;:', j, i
+            
             if self.stat.symbol[i].isupper() and (i != len( str( self.stat.amount))): #Parameter 4
                 print 'Compound<analyze>for;if1:', i, j
                 self.inside.append(
