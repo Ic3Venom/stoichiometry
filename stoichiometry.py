@@ -1,9 +1,24 @@
+from ctypes.test.test_pickling import name
 class Info:
     '''Holds information of Elements and Compounds'''
 
     def __init__(self):
         #Real names (in order): symbol, mass, name, number, amount
         self.data = ['', 0.0, '', 0, 0]
+    
+    def change(self, name, value):
+        i = 0
+        if name in [0, 'symbol']:
+            i = 0
+        elif name in [1, 'mass']:
+            i = 1
+        elif name in [2, 'name']:
+            i = 2
+        elif name in [3, 'number']:
+            i = 3
+        elif name in [4, 'amount']:
+            i = 4
+        self.data[i] = value
 
     def symbol(self):
         return self.data[0]
@@ -23,7 +38,7 @@ class Element:
         for i in range(len(self.stat.symbol) ):
             if not self.stat.symbol[i].isalpha():
                 temp = int(self.stat.symbol[i:])
-                self.stat.symbol = self.stat.symbol[:i]
+                self.stat.change('symbol', self.stat.symbol[:i])
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1
             return 1
@@ -38,6 +53,7 @@ class Element:
 
                     for term in range( len(line.split()) ):
                         self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
+                        self.stat.change(term, line.split()[term])
                     break
 
             else:
@@ -51,7 +67,7 @@ class Element:
         self.stat.symbol = symbol
         del symbol
 
-        self.stat.amount = compoundAmount * self.amount()
+        self.stat.change('amount', compoundAmount * self.amount())
         print 'Element<__init__> self.stat.symbol:', self.stat.symbol, self.stat.amount
 
         self.find()
@@ -118,8 +134,7 @@ class Compound:
 
         #if Compound has no coefficient, amount defaults to 1
         if not self.stat.symbol[0].isdigit():
-            change = '1' + self.stat.symbol
-            self.stat.symbol = change
+            self.stat.change('symbol', '1' + self.stat.symbol)
 
             return 1
 
@@ -130,6 +145,7 @@ class Compound:
         self.stat.mass = 0
         for i in self.inside:
             self.stat.mass += i.stat.data[1]
+            self.stat.change('mass', self.stat.mass + i.stat.mass)
 
     def __init__(self, symbol):
         self.stat = Info()
