@@ -1,4 +1,3 @@
-import symbol
 class Info:
     '''Holds information of Elements and Compounds'''
 
@@ -6,17 +5,17 @@ class Info:
         #Real names (in order): symbol, mass, name, number, amount
         self.data = ['', 0.0, '', 0, 0]
     
-    def change(self, name, value):
+    def change(self, dataTag, value):
         i = 0
-        if name in [0, 'symbol']:
+        if dataTag in [0, 'symbol']:
             i = 0
-        elif name in [1, 'mass']:
+        elif dataTag in [1, 'mass']:
             i = 1
-        elif name in [2, 'name']:
+        elif dataTag in [2, 'name']:
             i = 2
-        elif name in [3, 'number']:
+        elif dataTag in [3, 'number']:
             i = 3
-        elif name in [4, 'amount']:
+        elif dataTag in [4, 'amount']:
             i = 4
         self.data[i] = value
 
@@ -40,7 +39,7 @@ class Element:
                 temp = int(self.stat.symbol()[i:])
                 self.stat.change('symbol', self.stat.symbol()[:i])
                 return temp
-        else:   #if self.stat.symbol has no amount attached, defaults to 1
+        else:   #if self.stat.symbol has no amount attached, defaults to 1    
             return 1
 
     def find(self): #Might revert back to single data return
@@ -53,6 +52,7 @@ class Element:
 
                     for term in range( len(line.split()) ):
                         self.stat.change(term, type(self.stat.data[term])(line.split()[term]))
+                        print '    Element<find>with;for;if;for (term, line.split()[term])', term, type(self.stat.data[term])(line.split()[term])
                     break
 
             else:
@@ -64,12 +64,9 @@ class Element:
         self.stat = Info()
         self.stat.change('symbol', symbol)
         self.stat.change('amount', compoundAmount * self.amount())
-        
-        print '  Element<__init__> symbol:', symbol
-        print '  Element<__init__> self.stat.symbol:', self.stat.symbol(), self.stat.amount()
-
         self.find()
-
+        self.stat.change('mass', self.stat.mass() * self.stat.amount())
+        
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
 
@@ -82,8 +79,8 @@ class Compound:
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
             print 'Compound<analyze>for;start;:', j, i
             
-            if self.stat.symbol()[i].isupper() and (i != len( str( self.stat.amount()))): #P4
-                print 'Compound<analyze>for;if1:', i, j
+            if self.stat.symbol()[i].isupper() and (i != len(str(self.stat.amount()))): #P4
+                print 'Compound<analyze>for;if (i, j):', i, j
                 self.inside.append(
                     Element(
                         self.stat.symbol()[j:i],
@@ -120,20 +117,17 @@ class Compound:
                     self.stat.amount() ) )
 
     def coef(self):
-        for i in range( len(self.stat.symbol()) ):
-            currentChar = self.stat.symbol()[i]
-
-            if not currentChar.isdigit():
-                break
-
         #if Compound has no coefficient, amount defaults to 1
         if not self.stat.symbol()[0].isdigit():
             self.stat.change('symbol', '1' + self.stat.symbol())
-
             return 1
-
-        else:
-            return int( self.stat.symbol()[0:i] )
+        
+        for i in range( len( self.stat.symbol())):
+            if not self.stat.symbol()[i].isdigit():
+                temp = self.stat.symbol()[:i]
+                print 'Compound<coef>for;if (temp, self.stat.symbol)', temp, self.stat.symbol()
+                self.stat.change('symbol', self.stat.symbol[i:])
+                return temp
 
     def mass(self):
         for i in self.inside:
