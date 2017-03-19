@@ -1,4 +1,4 @@
-from ctypes.test.test_pickling import name
+import symbol
 class Info:
     '''Holds information of Elements and Compounds'''
 
@@ -35,10 +35,10 @@ class Element:
     '''A class to hold element information'''
 
     def amount(self):
-        for i in range(len(self.stat.symbol) ):
-            if not self.stat.symbol[i].isalpha():
-                temp = int(self.stat.symbol[i:])
-                self.stat.change('symbol', self.stat.symbol[:i])
+        for i in range(len(self.stat.symbol()) ):
+            if not self.stat.symbol()[i].isalpha():
+                temp = int(self.stat.symbol()[i:])
+                self.stat.change('symbol', self.stat.symbol()[:i])
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1
             return 1
@@ -49,26 +49,24 @@ class Element:
         with open('table.bin', 'rb') as f:
             for line in f:
 
-                if line.split()[0] == self.stat.symbol: #line.split()[0] is symbol location
+                if line.split()[0] == self.stat.symbol(): #line.split()[0] is symbol location
 
                     for term in range( len(line.split()) ):
-                        self.stat.data[term] = type(self.stat.data[term])(line.split()[term])
-                        self.stat.change(term, line.split()[term])
+                        self.stat.change(term, type(self.stat.data[term])(line.split()[term]))
                     break
 
             else:
-                print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol
+                print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol()
                 f.close()
                 exit(1)
 
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
-        print 'symbol', symbol
-        self.stat.symbol = symbol
-        del symbol
-
+        self.stat.change('symbol', symbol)
         self.stat.change('amount', compoundAmount * self.amount())
-        print 'Element<__init__> self.stat.symbol:', self.stat.symbol, self.stat.amount
+        
+        print '  Element<__init__> symbol:', symbol
+        print '  Element<__init__> self.stat.symbol:', self.stat.symbol(), self.stat.amount()
 
         self.find()
 
@@ -78,27 +76,26 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
-        j = len( str( self.stat.amount ) )
+        j = len( str( self.stat.amount() ) )
         brackets = ()
         
-        for i in range( len( str( self.stat.amount) ), len(self.stat.symbol) ):
+        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
             print 'Compound<analyze>for;start;:', j, i
             
-            if self.stat.symbol[i].isupper() and (i != len( str( self.stat.amount))): #Parameter 4
+            if self.stat.symbol()[i].isupper() and (i != len( str( self.stat.amount()))): #P4
                 print 'Compound<analyze>for;if1:', i, j
                 self.inside.append(
                     Element(
-                        self.stat.symbol[j:i],
-                        self.stat.amount ) )
+                        self.stat.symbol()[j:i],
+                        self.stat.amount() ) )
                 j = i
 
-
-            elif self.stat.symbol[i] == '(':  #P1
+            elif self.stat.symbol()[i] == '(':  #P1
                 if not j == i: #If not first char after total amount is '(', append another compound
                     self.inside.append(
                         Element(
-                            self.stat.symbol[j:i-1],
-                            self.stat.amount ) )
+                            self.stat.symbol()[j:i-1],
+                            self.stat.amount() ) )
                     j = i + 1
 
                 if not len(brackets) == 0:
@@ -108,52 +105,47 @@ class Compound:
                 else:
                     brackets += (i,)
 
-            elif self.stat.symbol[i] == ')':  #P1
+            elif self.stat.symbol()[i] == ')':  #P1
                 if not len(brackets) == 1:
                     print 'Missing brackets in userInput. Exiting program',
                     print 'If you believe this is wrong, report this in the GitHub repo.'
                     exit(1)
                 else:
-                    brackets += (i, int( self.stat.symbol[i+1:]), )
+                    brackets += (i, int( self.stat.symbol()[i+1:]), )
 
         else:
             self.inside.append(
                 Element(
-                    self.stat.symbol[j:],
-                    self.stat.amount ) )
-
-        print 'Compound.analyze() status: %r, %r' % (brackets, self.inside)
-        print self.inside[0].stat.symbol, self.inside[0].stat.amount
+                    self.stat.symbol()[j:],
+                    self.stat.amount() ) )
 
     def coef(self):
-        for i in range( len(self.stat.symbol) ):
-            currentChar = self.stat.symbol[i]
+        for i in range( len(self.stat.symbol()) ):
+            currentChar = self.stat.symbol()[i]
 
             if not currentChar.isdigit():
                 break
 
         #if Compound has no coefficient, amount defaults to 1
-        if not self.stat.symbol[0].isdigit():
-            self.stat.change('symbol', '1' + self.stat.symbol)
+        if not self.stat.symbol()[0].isdigit():
+            self.stat.change('symbol', '1' + self.stat.symbol())
 
             return 1
 
         else:
-            return int( self.stat.symbol[0:i] )
+            return int( self.stat.symbol()[0:i] )
 
     def mass(self):
-        self.stat.mass = 0
         for i in self.inside:
-            self.stat.mass += i.stat.data[1]
-            self.stat.change('mass', self.stat.mass + i.stat.mass)
+            self.stat.change('mass', self.stat.mass() + i.stat.mass())
 
     def __init__(self, symbol):
         self.stat = Info()
-        self.stat.symbol = symbol
-        self.stat.amount = self.coef()
-
         self.inside = []
-        self.massInput = 0.0
+        self.massInput = 0.0 #Will be used later
+                
+        self.stat.change('symbol', symbol)
+        self.stat.change('amount', self.coef())
 
         self.analyze()
         self.mass()
