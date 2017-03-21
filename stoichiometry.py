@@ -38,6 +38,7 @@ class Element:
             if not self.stat.symbol()[i].isalpha():
                 temp = int(self.stat.symbol()[i:])
                 self.stat.change('symbol', self.stat.symbol()[:i])
+                print '  Element<amount>for;if (self.stat.symbol()[:i], i, temp)', self.stat.symbol()[:i], i, temp
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1    
             return 1
@@ -77,7 +78,7 @@ class Compound:
         brackets = ()
         
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
-            print 'Compound<analyze>for;start;:', j, i
+            print 'Compound<analyze>for;start (i, j:', i, j
             
             if self.stat.symbol()[i].isupper() and (i != len(str(self.stat.amount()))): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
@@ -89,9 +90,10 @@ class Compound:
 
             elif self.stat.symbol()[i] == '(':  #P1
                 if not j == i: #If not first char after total amount is '(', append another compound
+                    print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i])', self.stat.symbol()[j:i]
                     self.inside.append(
                         Element(
-                            self.stat.symbol()[j:i-1],
+                            self.stat.symbol()[j:i],
                             self.stat.amount() ) )
                     j = i + 1
 
