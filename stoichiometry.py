@@ -89,7 +89,9 @@ class Compound:
                 j = i
 
             elif self.stat.symbol()[i] == '(':  #P1
-                if not j == i: #If not first char after total amount is '(', append another compound
+                '''for k in range(i, len( self.stat.symbol() )):
+                     if '''
+                if j != i: #If not first char after total amount is '(', append another compound
                     print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i])', self.stat.symbol()[j:i]
                     self.inside.append(
                         Element(
@@ -110,7 +112,10 @@ class Compound:
                     print 'If you believe this is wrong, report this in the GitHub repo.'
                     exit(1)
                 else:
-                    brackets += (i, int( self.stat.symbol()[i+1:]), )
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol()[j:i],
+                            self.stat.amount * brackets[2] ) )
 
         else:
             self.inside.append(
