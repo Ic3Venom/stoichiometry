@@ -63,8 +63,10 @@ class Element:
 
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
+        
         self.stat.change('symbol', symbol)
         self.stat.change('amount', compoundAmount * self.amount())
+        
         self.find()
         self.stat.change('mass', self.stat.mass() * self.stat.amount())
         
@@ -78,9 +80,9 @@ class Compound:
         brackets = ()
         
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
-            print 'Compound<analyze>for;start (i, j:', i, j
+            print 'Compound<analyze>for;start (j, i, currentChar):', j, i, self.stat.symbol()[i]
             
-            if self.stat.symbol()[i].isupper() and (i != len(str(self.stat.amount()))): #P4
+            if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
                 self.inside.append(
                     Element(
@@ -97,7 +99,7 @@ class Compound:
                         Element(
                             self.stat.symbol()[j:i],
                             self.stat.amount() ) )
-                    j = i + 1
+                    j = i + 2
 
                 if not len(brackets) == 0:
                     print 'Too many \'\(\' brackets in userInput. Exiting program',
