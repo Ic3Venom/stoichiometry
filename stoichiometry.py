@@ -80,7 +80,7 @@ class Compound:
         brackets = ()
         
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
-            print 'Compound<analyze>for;start (j, i, currentChar):', j, i, self.stat.symbol()[i]
+            print 'Compound<analyze>for;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
             
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
@@ -91,8 +91,13 @@ class Compound:
                 j = i
 
             elif self.stat.symbol()[i] == '(':  #P1
-                '''for k in range(i, len( self.stat.symbol() )):
-                     if '''
+                for k in range( len( self.stat.symbol()[i:])):
+                    if self.stat.symbol()[i+k] == ')':
+                        for l in range( len( self.stat.symbol()[k:])):
+                            if self.stat.symbol()[l].isupper():
+                                brackets = (i, k, self.stat.symbol()[k:l])
+                                break
+                              
                 if j != i: #If not first char after total amount is '(', append another compound
                     print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i])', self.stat.symbol()[j:i]
                     self.inside.append(
@@ -102,11 +107,9 @@ class Compound:
                     j = i + 2
 
                 if not len(brackets) == 0:
-                    print 'Too many \'\(\' brackets in userInput. Exiting program',
+                    print 'Too many brackets in userInput. Exiting program',
                     print 'If you believe this is wrong, report this in the GitHub repo.'
                     exit(1)
-                else:
-                    brackets += (i,)
 
             elif self.stat.symbol()[i] == ')':  #P1
                 if not len(brackets) == 1:
