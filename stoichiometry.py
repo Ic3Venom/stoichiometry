@@ -77,10 +77,21 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount() ) )
-        brackets = ()
+        brackets = [0]
+        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
+            print 'Compound<analyze>for1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
+            if self.stat.symbol()[i] == '(':
+                brackets.append((i, 0, 1))
+            elif self.stat.symbol()[i] == ')':
+                brackets[brackets[0]][1] = i
+                for j in range( i, len(self.stat.symbol())):
+                    print '  Compound<analyze>for1;if2 (j, i, currentChar, brackets):', j, i, self.stat.symbol()[j], brackets
+                    if self.stat.symobol()[j].isalpha():
+                        brackets[brackets[0]][2] = self.stat.symbol()[i:j]
+                        brackets[0] += 1    
         
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
-            print 'Compound<analyze>for;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
+            print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
             
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
