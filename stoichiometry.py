@@ -6,18 +6,17 @@ class Info:
         self.data = ['', 0.0, '', 0, 0]
     
     def change(self, dataTag, value):
-        i = 0
         if dataTag in [0, 'symbol']:
-            i = 0
+            dataTag = 0
         elif dataTag in [1, 'mass']:
-            i = 1
+            dataTag = 1
         elif dataTag in [2, 'name']:
-            i = 2
+            dataTag = 2
         elif dataTag in [3, 'number']:
-            i = 3
+            dataTag = 3
         elif dataTag in [4, 'amount']:
-            i = 4
-        self.data[i] = value
+            dataTag = 4
+        self.data[dataTag] = value
 
     def symbol(self):
         return self.data[0]
@@ -77,18 +76,26 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount() ) )
-        brackets = [0]
+        brackets = [1]
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
             if self.stat.symbol()[i] == '(':
-                brackets.append((i, 0, 1))
+                brackets.append([i, 0, 1])
             elif self.stat.symbol()[i] == ')':
-                brackets[brackets[0]][1] 
-                for j in range( i, len(self.stat.symbol())):
-                    print '  Compound<analyze>for1;if2 (j, i, currentChar, brackets):', j, i, self.stat.symbol()[j], brackets
-                    if self.stat.symobol()[j].isalpha():
-                        brackets[brackets[0]][2] = self.stat.symbol()[i:j]
-        
+                print brackets, brackets[brackets[0]][0] + 1
+                brackets[brackets[0]][1] = i
+                for j in range( i, len(self.stat.symbol()) + 1):
+                    try:
+                        print '  Compound<analyze>for1;try;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[j], brackets
+                        if self.stat.symbol()[j].isalpha():
+                            brackets[brackets[0]][2] = int(self.stat.symbol()[i:j])
+                            break
+                    except IndexError:
+                        if j - 1 == len(self.stat.symbol()):
+                            print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i:j-1])
+                            brackets[brackets[0]][2] = int(self.stat.symbol()[i:len(self.stat.symbol())])
+                            break
+
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
             print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
             
