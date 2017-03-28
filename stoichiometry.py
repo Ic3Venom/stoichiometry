@@ -82,12 +82,13 @@ class Compound:
             if self.stat.symbol()[i] == '(':
                 brackets.append([i, 0, 1])
             elif self.stat.symbol()[i] == ')':
-                print brackets, brackets[brackets[0]][0] + 1
+                print 'Compound<analyze>for1;if2;start (i, self.stat.symbol()[i])', i, self.stat.symbol()[i]
                 brackets[brackets[0]][1] = i
                 for j in range( i, len(self.stat.symbol()) + 1):
                     try:
-                        print '  Compound<analyze>for1;try;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[j], brackets
+                        print '  Compound<analyze>for1;if2;for1;try;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[j], brackets
                         if self.stat.symbol()[j].isalpha():
+                            print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j])', int(self.stat.symbol()[i:j])
                             brackets[brackets[0]][2] = int(self.stat.symbol()[i:j])
                             break
                     except IndexError:
