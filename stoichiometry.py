@@ -79,17 +79,21 @@ class Compound:
         brackets = [1]
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
+            
             if self.stat.symbol()[i] == '(':
                 brackets.append([i, 0, 1])
+            
             elif self.stat.symbol()[i] == ')':
                 print 'Compound<analyze>for1;if2;start (i, self.stat.symbol()[i])', i, self.stat.symbol()[i]
                 brackets[brackets[0]][1] = i
+            
                 for j in range( i, len(self.stat.symbol()) + 1):
                     try:
                         if self.stat.symbol()[j].isalpha():
                             print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j])', int(self.stat.symbol()[i:j])
                             brackets[brackets[0]][2] = int(self.stat.symbol()[i:j])
                             break
+                
                     except IndexError:
                         if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput without brackets[3]
                             print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i+1:j])
