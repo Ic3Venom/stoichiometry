@@ -86,15 +86,15 @@ class Compound:
                 brackets[brackets[0]][1] = i
                 for j in range( i, len(self.stat.symbol()) + 1):
                     try:
-                        print '  Compound<analyze>for1;if2;for1;try;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[j], brackets
                         if self.stat.symbol()[j].isalpha():
                             print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j])', int(self.stat.symbol()[i:j])
                             brackets[brackets[0]][2] = int(self.stat.symbol()[i:j])
                             break
                     except IndexError:
-                        if j - 1 == len(self.stat.symbol()):
-                            print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i:j-1])
-                            brackets[brackets[0]][2] = int(self.stat.symbol()[i:len(self.stat.symbol())])
+                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput without brackets[3]
+                            print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i+1:j])
+                            brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
+                            print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end:', int(self.stat.symbol()[i+1:j])
                             break
 
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
