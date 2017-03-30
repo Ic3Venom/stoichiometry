@@ -265,26 +265,6 @@ def limiting():
         else:
             i.massInput = float( raw_input(">>>") ) #Would like to rename variable
 
-    #debug
-    for i in reactants:
-        print 'reactants:'
-        print '%10f' % i.massInput
-        for j in i.inside:
-            print 'r:'
-            print '%10s' % j.stat.data[0]
-            print '%10f' % j.stat.data[1]
-            print '%10s' % j.stat.data[2]
-            print '%10d' % j.stat.data[3]
-    for i in products:
-        print i.massInput
-        print 'products:'
-        for j in i.inside:
-            print 'p:'
-            print '%10s' % j.stat.data[0]
-            print '%10f' % j.stat.data[1]
-            print '%10s' % j.stat.data[2]
-            print '%10d' % j.stat.data[3]
-
 def main():
     #Phase 1: read input and check for commands
     while True:
