@@ -56,7 +56,7 @@ class Element:
                     break
 
             else:
-                print 'ERROR: unknown element %s. Exiting program' % self.stat.symbol()
+                print 'ERROR: unknown element \'%s\'. Exiting program' % self.stat.symbol()
                 f.close()
                 exit(1)
 
@@ -77,7 +77,7 @@ class Compound:
 
         j = len( str( self.stat.amount() ) )
         brackets = [1]
-        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
+        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol())):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
 
             if self.stat.symbol()[i] == '(':
@@ -101,9 +101,17 @@ class Compound:
                             print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end:', int(self.stat.symbol()[i+1:j])
                             break
 
-        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) ):
+        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) +1):
             print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
-
+            try:
+                self.stat.symbol()[i] = self.stat.symbol()[i]
+            except IndexError:
+                self.inside.append(
+                    Element(
+                        self.stat.symbol()[j:i-1]
+                        self.stat.amount() ) )
+                break
+            
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
                 self.inside.append(
@@ -114,7 +122,7 @@ class Compound:
 
             elif self.stat.symbol()[i] == '(':  #P1
                 if j != i: #If not first char after total amount is '(', append another compound
-                    print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i])', self.stat.symbol()[j:i]
+                    print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i], j, i)', self.stat.symbol()[j:i], j, i
                     self.inside.append(
                         Element(
                             self.stat.symbol()[j:i],
