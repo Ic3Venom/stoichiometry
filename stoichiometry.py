@@ -71,7 +71,12 @@ class Element:
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
-
+    def bracketIndex(self, brackets, i, j):
+        for bracket in brackets[1:]:
+            print 'Compound<brackets> for;start (i, j, i[2])', i, j, i[2]
+            if bracket[0] > j and bracket[1] < i:
+                print 'Compound<bracketIndex> for;if1;start (i, j, i[2])', i, j, i[2]
+                return i[2]
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
@@ -104,11 +109,11 @@ class Compound:
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) +1):
             print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
             try:
-                self.stat.symbol()[i] = self.stat.symbol()[i]
+                self.stat.symbol()[i] == self.stat.symbol()[i]
             except IndexError:
                 self.inside.append(
                     Element(
-                        self.stat.symbol()[j:i-1]
+                        self.stat.symbol()[j:i-1],
                         self.stat.amount() ) )
                 break
             
