@@ -100,22 +100,14 @@ class Compound:
                             break
 
                     except IndexError:
-                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput without brackets[3]
+                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput not containing brackets[3]
                             print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i+1:j])
                             brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
                             print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end:', int(self.stat.symbol()[i+1:j])
                             break
 
-        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) +1):
+        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol())):
             print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
-            try:
-                self.stat.symbol()[i] == self.stat.symbol()[i]
-            except IndexError:
-                self.inside.append(
-                    Element(
-                        self.stat.symbol()[j:i-1],
-                        self.stat.amount() ) )
-                break
             
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
@@ -151,6 +143,7 @@ class Compound:
                             self.stat.amount * brackets[2] ) )
 
         else:
+            print 'Reached: for2<else> (self.stat.symbol()[j:], i, j)', self.stat.symbol()[j:], i, j
             self.inside.append(
                 Element(
                     self.stat.symbol()[j:],
