@@ -95,19 +95,28 @@ class Compound:
                 for j in range( i, len(self.stat.symbol()) + 1):
                     try:
                         if self.stat.symbol()[j].isalpha():
-                            print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j])', int(self.stat.symbol()[i+1:j])
-                            brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
+                            print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j], brackets)', int(self.stat.symbol()[i+1:j-1])
+                            brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j-1])
                             break
 
                     except IndexError:
-                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput not containing brackets[3]
+                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput without brackets[3]
                             print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i+1:j])
                             brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
-                            print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end:', int(self.stat.symbol()[i+1:j])
+                            print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                             break
 
-        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol())):
+        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) +1):
             print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
+            try:
+                self.stat.symbol()[i] == self.stat.symbol()[i]
+            except IndexError:
+                print 'Compound<analyze> for2;except<IndexError>;start'
+                self.inside.append(
+                    Element(
+                        self.stat.symbol()[j:i-1],
+                        self.stat.amount() ) )
+                break
             
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>for;if (i, j):', i, j
