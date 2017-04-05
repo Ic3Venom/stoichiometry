@@ -77,11 +77,15 @@ class Compound:
             if bracket[0] > j and bracket[1] < i:
                 print 'Compound<bracketIndex> for;if1;start (i, j, i[2])', i, j, i[2]
                 return i[2]
+        else:
+            return 1
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount() ) )
         brackets = [1]
+        
+        #For1: searches symbol for brackets, and if found, will put more information of them
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol())):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
 
@@ -100,7 +104,7 @@ class Compound:
                             break
 
                     except IndexError:
-                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude userInput without brackets[3]
+                        if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude symbol  without brackets[3]
                             print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i+1:j])
                             brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
                             print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
@@ -109,7 +113,41 @@ class Compound:
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) +1):
             print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
             try:
-                self.stat.symbol()[i] == self.stat.symbol()[i]
+                if self.stat.symbol()[i].isupper(): #P4
+                    print 'Compound<analyze>for;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
+                    self.inside.append(
+                        Element(
+                            self.stat.symbol()[j:i],
+                            self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
+                    j = i
+    
+                elif self.stat.symbol()[i] == '(':  #P1
+                    if j != i: #If not first char after total amount is '(', append another compound
+                        print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i], j, i, self.bracketIndex(brackets, i, j))', self.stat.symbol()[j:i], j, i, self.bracketIndex(brackets, i, j)
+                        self.inside.append(
+                            Element(
+                                self.stat.symbol()[j:i],
+                                self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
+                        j = i + 2
+    
+                    if not len(brackets) == 0:
+                        print 'Too many brackets in userInput. Exiting program',
+                        print 'If you believe this is wrong, report this in the GitHub repo.'
+                        exit(1)
+    
+                elif self.stat.symbol()[i] == ')':  #P1
+                    if not len(brackets) == 1:
+                        print 'Missing brackets in userInput. Exiting program',
+                        print 'If you believe this is wrong, report this in the GitHub repo.'
+                        exit(1)
+                        
+                    else:
+                        print 'Compound<analyze> for2;try;if3;else;start (self.bracketIndex(brackets, i, j), i, j)', self.bracketIndex(brackets, i, j), i, j
+                        self.inside.append(
+                            Element(
+                                self.stat.symbol()[j:i],
+                                self.stat.amount * brackets[2] * self.bracketIndex(brackets, i, j) ) )
+                        
             except IndexError:
                 print 'Compound<analyze> for2;except<IndexError>;start'
                 self.inside.append(
@@ -117,46 +155,6 @@ class Compound:
                         self.stat.symbol()[j:i-1],
                         self.stat.amount() ) )
                 break
-            
-            if self.stat.symbol()[i].isupper(): #P4
-                print 'Compound<analyze>for;if (i, j):', i, j
-                self.inside.append(
-                    Element(
-                        self.stat.symbol()[j:i],
-                        self.stat.amount() ) )
-                j = i
-
-            elif self.stat.symbol()[i] == '(':  #P1
-                if j != i: #If not first char after total amount is '(', append another compound
-                    print 'Compound<analyze>for;elif1;if1 (self.stat.symbol()[j:i], j, i)', self.stat.symbol()[j:i], j, i
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol()[j:i],
-                            self.stat.amount() ) )
-                    j = i + 2
-
-                if not len(brackets) == 0:
-                    print 'Too many brackets in userInput. Exiting program',
-                    print 'If you believe this is wrong, report this in the GitHub repo.'
-                    exit(1)
-
-            elif self.stat.symbol()[i] == ')':  #P1
-                if not len(brackets) == 1:
-                    print 'Missing brackets in userInput. Exiting program',
-                    print 'If you believe this is wrong, report this in the GitHub repo.'
-                    exit(1)
-                else:
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol()[j:i],
-                            self.stat.amount * brackets[2] ) )
-
-        else:
-            print 'Reached: for2<else> (self.stat.symbol()[j:], i, j)', self.stat.symbol()[j:], i, j
-            self.inside.append(
-                Element(
-                    self.stat.symbol()[j:],
-                    self.stat.amount() ) )
 
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
