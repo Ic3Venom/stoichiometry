@@ -73,9 +73,9 @@ class Compound:
     '''A class to hold compounds, which hold class(Element)'''
     def bracketIndex(self, brackets, i, j):
         for bracket in brackets[1:]:
-            print 'Compound<brackets> for;start (i, j, i[2])', i, j, i[2]
+            print 'Compound<brackets> for;start (bracket, j, bracket[2])', bracket, j, bracket[2]
             if bracket[0] > j and bracket[1] < i:
-                print 'Compound<bracketIndex> for;if1;start (i, j, i[2])', i, j, i[2]
+                print 'Compound<bracketIndex> for;if1;start (i, j, i[2])', bracket, j, bracket[2]
                 return i[2]
         else:
             return 1
