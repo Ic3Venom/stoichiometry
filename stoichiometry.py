@@ -74,11 +74,12 @@ class Compound:
     def bracketIndex(self, brackets, i, j):
         for bracket in brackets[1:]:
             print 'Compound<brackets> for;start (bracket, j, bracket[2])', bracket, j, bracket[2]
-            if bracket[0] > j and bracket[1] < i:
+            if bracket[0] < j and bracket[1] > i:
                 print 'Compound<bracketIndex> for;if1;start (i, j, i[2])', bracket, j, bracket[2]
-                return i[2]
+                return bracket[2]
         else:
             return 1
+
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
@@ -147,7 +148,7 @@ class Compound:
                             Element(
                                 self.stat.symbol()[j:i],
                                 self.stat.amount * brackets[2] * self.bracketIndex(brackets, i, j) ) )
-                        
+                #elif self.bracketIndex(brackets, i, j)   need to skip brackets[2] indices(is that how you spell it?)      
             except IndexError:
                 print 'Compound<analyze> for2;except<IndexError>;start'
                 self.inside.append(
