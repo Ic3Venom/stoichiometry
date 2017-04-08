@@ -79,7 +79,17 @@ class Compound:
                 return bracket[2]
         else:
             return 1
-
+    
+    def skipIndex(self, brackets, i):
+        print 'BRACKETS:', brackets,
+        for j in brackets[1:]:
+            print 'j:', j
+            if j[2] == i:
+                return 1
+            else:
+                return 0
+            
+            
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
@@ -112,7 +122,7 @@ class Compound:
                             break
 
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol()) +1):
-            print 'Compound<analyze>for2;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
+            print 'Compound<analyze>for2;start (j, i, currentChar, brackets, self.skipIndex(brackets, i)):', j, i, self.stat.symbol()[i], brackets, self.skipIndex(brackets, i)
             try:
                 if self.stat.symbol()[i].isupper(): #P4
                     print 'Compound<analyze>for;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
@@ -148,7 +158,9 @@ class Compound:
                             Element(
                                 self.stat.symbol()[j:i],
                                 self.stat.amount * brackets[2] * self.bracketIndex(brackets, i, j) ) )
-                #elif self.bracketIndex(brackets, i, j)   need to skip brackets[2] indices(is that how you spell it?)      
+                        
+                elif self.skipIndex(brackets, i) == 1:
+                    continue
             except IndexError:
                 print 'Compound<analyze> for2;except<IndexError>;start'
                 self.inside.append(
