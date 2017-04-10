@@ -79,16 +79,6 @@ class Compound:
                 return bracket[2]
         else:
             return 1
-    
-    def skipIndex(self, brackets, i):
-        print 'BRACKETS:', brackets,
-        for j in brackets[1:]:
-            print 'j:', j
-            if j[2] == i:
-                return 1
-            else:
-                return 0
-            
             
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
@@ -160,8 +150,11 @@ class Compound:
                             Element(
                                 self.stat.symbol()[j:i],
                                 self.stat.amount * brackets[2] * self.bracketIndex(brackets, i, j) ) )
-
-            except IndexError:
+                        
+                        i += len( str( self.bracketIndex(brackets, i, j))) + 1
+                        continue
+                
+            except IndexError:              
                 print 'Compound<analyze>while1;except<IndexError>;start'
                 self.inside.append(
                     Element(
@@ -170,6 +163,7 @@ class Compound:
                 break
             
             i += 1
+
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
         if not self.stat.symbol()[0].isdigit():
