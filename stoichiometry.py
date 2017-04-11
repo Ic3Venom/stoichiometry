@@ -102,6 +102,7 @@ class Compound:
                     if self.stat.symbol()[j].isalpha():
                         print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j], brackets)', int(self.stat.symbol()[i+1:j-1])
                         brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j-1])
+                        brackets[0] += 1
                         break
                     
                 else:
