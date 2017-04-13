@@ -99,7 +99,7 @@ class Compound:
                 
                 brackets[brackets[0]][1] = i
 
-                for j in range( i, len(self.stat.symbol()) + 1):
+                for j in range( i, len(self.stat.symbol())):
                     if self.stat.symbol()[j].isalpha():
                         print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j], brackets)', int(self.stat.symbol()[i+1:j-1])
                         brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j-1])
@@ -116,8 +116,7 @@ class Compound:
         i = self.stat.amount() #resetting value of i
         
         while i < (len(self.stat.symbol()) + 1):
-            print 'Compound<analyze>while1;start (j, i, currentChar, brackets, self.skipIndex(brackets, i)):', j, i, self.stat.symbol()[i], brackets, self.skipIndex(brackets, i)
-            
+            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
                 self.inside.append(
