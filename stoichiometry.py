@@ -84,7 +84,7 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount() ) )
-        i = len( str( self.stat.amount() ) )
+        i = 0
         brackets = [1]
         
         #For1: searches symbol for brackets, and if found, will put more information of them
@@ -110,7 +110,7 @@ class Compound:
                     if j == len(self.stat.symbol()) and i != len(self.stat.symbol()) -1: #second part used to exclude symbol  without brackets[3]
                         print '    Compound<analyze>for;except<IndexError>;if1 int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[i+1:j])
                         brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
-                        print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2) end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
+                        print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                         break
                     
         i = self.stat.amount() #resetting value of i
@@ -127,12 +127,12 @@ class Compound:
 
             elif self.stat.symbol()[i] == '(':  #P1
                 if j != i: #If not first char after total amount is '(', append another compound
-                    print 'Compound<analyze>while1;elif1;if1 (self.stat.symbol()[j:i], j, i, self.bracketIndex(brackets, i, j))', self.stat.symbol()[j:i], j, i, self.bracketIndex(brackets, i, j)
+                    print 'Compound<analyze>while1;elif1;if1 (self.stat.symbol()[j:i], j, i', self.stat.symbol()[j:i], j, i
                     self.inside.append(
                         Element(
                             self.stat.symbol()[j:i],
                             self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
-                    j = i + 2
+                    j = i + 1
 
                 if not len(brackets) == 0:
                     print 'Too many brackets in userInput. Exiting program',
@@ -146,7 +146,7 @@ class Compound:
                     exit(1)
                     
                 else:
-                    print 'Compound<analyze>while1;try;if3;else;start (self.bracketIndex(brackets, i, j), i, j)', self.bracketIndex(brackets, i, j), i, j
+                    print 'Compound<analyze>while1;try;if3;else;start (i, j)', i, j
                     self.inside.append(
                         Element(
                             self.stat.symbol()[j:i],
