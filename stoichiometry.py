@@ -115,7 +115,7 @@ class Compound:
                     
         i = self.stat.amount() #resetting value of i
         
-        while i < (len(self.stat.symbol()) + 1):
+        while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
             if self.stat.symbol()[i].isupper(): #P4
                 print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
