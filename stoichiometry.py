@@ -84,9 +84,9 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         j = len( str( self.stat.amount() ) )
-        i = 0
+        i = len( str( self.stat.amount() ) )
         brackets = [1]
-        
+        print 'Compound<analyze>start (self.stat.symbol())', self.stat.symbol()
         #For1: searches symbol for brackets, and if found, will put more information of them
         for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol())):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
@@ -113,7 +113,8 @@ class Compound:
                         print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                         break
                     
-        i = self.stat.amount() #resetting value of i
+        j = len( str( self.stat.amount() ) ) #resetting value of j
+        i = len( str( self.stat.amount() ) ) #resetting value of i
         
         while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
@@ -124,6 +125,7 @@ class Compound:
                         self.stat.symbol()[j:i],
                         self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
                 j = i
+                print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol[j:], self.stat.symbol[:i]
 
             elif self.stat.symbol()[i] == '(':  #P1
                 if j != i: #If not first char after total amount is '(', append another compound
@@ -133,11 +135,6 @@ class Compound:
                             self.stat.symbol()[j:i],
                             self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
                     j = i + 1
-
-                if not len(brackets) == 0:
-                    print 'Too many brackets in userInput. Exiting program',
-                    print 'If you believe this is wrong, report this in the GitHub repo.'
-                    exit(1)
 
             elif self.stat.symbol()[i] == ')':  #P1
                 if not len(brackets) == 1:
@@ -167,14 +164,13 @@ class Compound:
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
         if not self.stat.symbol()[0].isdigit():
-            self.stat.change('symbol', '1' + self.stat.symbol())
             return 1
 
         for i in range( len( self.stat.symbol())):
             if not self.stat.symbol()[i].isdigit():
                 temp = self.stat.symbol()[:i]
                 print 'Compound<coef>for;if (temp, self.stat.symbol)', temp, self.stat.symbol()
-                self.stat.change('symbol', self.stat.symbol[i:])
+                self.stat.change('symbol', self.stat.symbol()[i:])
                 return temp
 
     def mass(self):
