@@ -273,7 +273,7 @@ def limiting():
 
     #Phase 3: userInput of each compound's mass
     for i in reactants + products:
-        print i
+        print "Limiting for2;start (i)", i
         print 'How many grams of %s are in the reaction? (Type \'?\' if value is unknown' % i.stat.symbol
 
         if userInput == '?':
@@ -304,11 +304,14 @@ def main():
         elif userInput.lower() in ['limiting', 'lim']:
             limiting()
             break
+        
+        else:
+            print 'Unknown value "%s".' % userInput
 
 if __name__ == '__main__':
-    test = Compound( raw_input("Compound: ") )
+    test = Compound( raw_input("Compound: ") ) #TODO: remove
     print test.stat.data
 
-    #main() *need to work on Compound.analyze() more
+    #main() *need to work on Compound.analyze() more before I can work on main()
 
     exit(0)
