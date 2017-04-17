@@ -83,12 +83,11 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
-        j = len( str( self.stat.amount() ) )
-        i = len( str( self.stat.amount() ) )
         brackets = [1]
         print 'Compound<analyze>start (self.stat.symbol())', self.stat.symbol()
+        
         #For1: searches symbol for brackets, and if found, will put more information of them
-        for i in range( len( str( self.stat.amount()) ), len(self.stat.symbol())):
+        for i in range(len(self.stat.symbol())):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
 
             if self.stat.symbol()[i] == '(':
@@ -113,8 +112,8 @@ class Compound:
                         print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                         break
                     
-        j = len( str( self.stat.amount() ) ) #resetting value of j
-        i = len( str( self.stat.amount() ) ) #resetting value of i
+        i = 0
+        j = 0
         
         while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
