@@ -49,10 +49,10 @@ class Element:
             for line in f:
 
                 if line.split()[0] == self.stat.symbol(): #line.split()[0] is symbol location
-
                     for term in range( len(line.split()) ):
                         self.stat.change(term, type(self.stat.data[term])(line.split()[term]))
                         print '    Element<find>with;for;if;for (term, line.split()[term])', term, type(self.stat.data[term])(line.split()[term])
+                    
                     break
 
             else:
@@ -73,7 +73,7 @@ class Compound:
     '''A class to hold compounds, which hold class(Element)'''
     def bracketIndex(self, brackets, i, j):
         for bracket in brackets[1:]:
-            print 'Compound<brackets> for;start (bracket, j, bracket[2])', bracket, j, bracket[2]
+            print 'Compound<bracketIndex> for;start (bracket, j, bracket[2])', bracket, j, bracket[2]
             if bracket[0] < j and bracket[1] > i:
                 print 'Compound<bracketIndex> for;if1;start (i, j, i[2])', bracket, j, bracket[2]
                 return bracket[2]
