@@ -117,7 +117,7 @@ class Compound:
         
         while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
-            if self.stat.symbol()[i].isupper() and (len(self.inside) > 0): #P4
+            if self.stat.symbol()[i].isupper() and i < 1: #P4
                 print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
                 self.inside.append(
                     Element(
@@ -131,7 +131,7 @@ class Compound:
                     print 'Compound<analyze>while1;elif1;if1 (self.stat.symbol()[j:i], j, i', self.stat.symbol()[j:i], j, i
                     self.inside.append(
                         Element(
-                            self.stat.symbol()[j+1:i],
+                            self.stat.symbol()[j:i],
                             self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
                     j = i
 
@@ -139,7 +139,7 @@ class Compound:
                 print 'Compound<analyze>while1;try;if3;else;start (i, j)', i, j
                 self.inside.append(
                     Element(
-                        self.stat.symbol()[j:i],
+                        self.stat.symbol()[brackets[brackets[0]][0]+1:i],
                         self.stat.amount() * brackets[brackets[0]][2] * self.bracketIndex(brackets, i, j) ) )
                 
                 i += len( str( self.bracketIndex(brackets, i, j))) + 1
