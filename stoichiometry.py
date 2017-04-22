@@ -111,9 +111,9 @@ class Compound:
                         brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
                         print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                         break
-                    
         i = 0
         j = 0
+        brackets[0] = 0
         
         while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
@@ -143,6 +143,7 @@ class Compound:
                         self.stat.amount() * brackets[brackets[0]][2] * self.bracketIndex(brackets, i, j) ) )
                 
                 i += len( str( self.bracketIndex(brackets, i, j))) + 1
+                brackets[0] += 1
                 continue
             
             i += 1
