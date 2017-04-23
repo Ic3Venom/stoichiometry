@@ -111,13 +111,24 @@ class Compound:
                         brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j])
                         print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                         break
-        i = 0
-        j = 0
-        brackets[0] = 0
+                    
+        #Checks if first char in self.stat.symbol() is capitalized or is \'(\''
+        if self.stat.symbol()[0].isupper():
+            i = 1
+            j = 1
+        elif self.stat.symbol()[0] == '(':
+            i = 0
+            j = 0
+        else:
+            print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol()[0]
+            exit(1)
+            
+        brackets[0] = 1
         
         while i <= len(self.stat.symbol()):
-            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets            
-            if self.stat.symbol()[i].isupper() and i < 1: #P4
+            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets  
+                      
+            if self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(': #P4
                 print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
                 self.inside.append(
                     Element(
@@ -126,17 +137,8 @@ class Compound:
                 j = i
                 print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol[j:], self.stat.symbol[:i]
 
-            elif self.stat.symbol()[i] == '(':  #P1
-                if j != i: #If not first char after total amount is '(', append another compound
-                    print 'Compound<analyze>while1;elif1;if1 (self.stat.symbol()[j:i], j, i', self.stat.symbol()[j:i], j, i
-                    self.inside.append(
-                        Element(
-                            self.stat.symbol()[j:i],
-                            self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
-                    j = i
-
             elif self.stat.symbol()[i] == ')':  #P1
-                print 'Compound<analyze>while1;try;if3;else;start (i, j)', i, j
+                print 'Compound<analyze>while1;try;if3;else;start (i, j, brackets)', i, j, brackets
                 self.inside.append(
                     Element(
                         self.stat.symbol()[brackets[brackets[0]][0]+1:i],
