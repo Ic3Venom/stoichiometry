@@ -114,15 +114,12 @@ class Compound:
                     
         #Checks if first char in self.stat.symbol() is capitalized or is \'(\''
         if self.stat.symbol()[0].isupper():
-            i = 1
-            j = 1
+            i = j = 1
         elif self.stat.symbol()[0] == '(':
-            i = 0
-            j = 0
-        else:
+            i = j = 0
+        else: 
             print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol()[0]
             exit(1)
-            
         brackets[0] = 1
         
         while i <= len(self.stat.symbol()):
@@ -130,22 +127,27 @@ class Compound:
                       
             if self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(': #P4
                 print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
+                
                 self.inside.append(
                     Element(
                         self.stat.symbol()[j:i],
                         self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
+                
                 j = i
                 print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol[j:], self.stat.symbol[:i]
 
             elif self.stat.symbol()[i] == ')':  #P1
                 print 'Compound<analyze>while1;try;if3;else;start (i, j, brackets)', i, j, brackets
+                
                 self.inside.append(
                     Element(
                         self.stat.symbol()[brackets[brackets[0]][0]+1:i],
                         self.stat.amount() * brackets[brackets[0]][2] * self.bracketIndex(brackets, i, j) ) )
                 
+                j =  i + 1
                 i += len( str( self.bracketIndex(brackets, i, j))) + 1
                 brackets[0] += 1
+                
                 continue
             
             i += 1
