@@ -83,7 +83,7 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
-        brackets = [1]
+        brackets = [1] #Initially starts with the first index where bracket indices will be stored
         print 'Compound<analyze>start (self.stat.symbol())', self.stat.symbol()
         
         #For1: searches symbol for brackets, and if found, will put more information of them
@@ -112,7 +112,7 @@ class Compound:
                         print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[i+1:j]), brackets
                         break
                     
-        #Checks if first char in self.stat.symbol() is capitalized or is \'(\''
+        #Checks if first char in self.stat.symbol() is capitalized or is '('
         if self.stat.symbol()[0].isupper():
             i = j = 1
         elif self.stat.symbol()[0] == '(':
@@ -125,16 +125,15 @@ class Compound:
         while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets  
                       
-            if self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(': #P4
-                print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j, self.bracketIndex(brackets, i, j)
-                
-                self.inside.append(
+            if self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(' and (i > 0): #P4
+                print 'Compound<analyze>while1;if (i, j, self.bracketIndex(brackets, i, j)):', i, j
+                print self.bracketIndex(brackets, i, j)
+                self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
-                        self.stat.symbol()[j:i],
+                        self.stat.symbol()[j+1:i+1],
                         self.stat.amount() * self.bracketIndex(brackets, i, j) ) )
-                
                 j = i
-                print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol[j:], self.stat.symbol[:i]
+                print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol()[j:], self.stat.symbol()[:i]
 
             elif self.stat.symbol()[i] == ')':  #P1
                 print 'Compound<analyze>while1;try;if3;else;start (i, j, brackets)', i, j, brackets
@@ -167,7 +166,7 @@ class Compound:
         for i in range( len( self.stat.symbol())):
             if not self.stat.symbol()[i].isdigit():
                 temp = self.stat.symbol()[:i]
-                print 'Compound<coef>for;if (temp, self.stat.symbol)', temp, self.stat.symbol()
+                print 'Compound<coef>for;if (temp, self.stat.symbol())', temp, self.stat.symbol()
                 self.stat.change('symbol', self.stat.symbol()[i:])
                 return temp
 
