@@ -123,8 +123,12 @@ class Compound:
         
         while i <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets  
-                      
-            if self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(' and (i > 0): #P4
+            if self.stat.symbol()[i] == '(' and i == 0:
+                j += 1
+                continue
+                
+            elif self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(' and (i > 0): #P4
+                
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol()[j:i],
@@ -140,10 +144,8 @@ class Compound:
                         self.stat.amount() * brackets[brackets[0]][2] ) )
                 
                 j =  i + 1
-                i += len( str( self.bracketAmount(brackets, i, j))) + 1
+                i += len( str( self.bracketAmount(brackets, i, j)))
                 brackets[0] += 1
-                
-                continue
             
             i += 1
 
