@@ -105,7 +105,6 @@ class Compound:
                         break
                     
                 else:
-                    print 'ELSE:', self.stat.symbol(), j, i, self.stat.symbol()[j:]
                     print '    Compound<analyze>for1;if2;for1;end int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[j:])
                     brackets[brackets[0]][2] = int(self.stat.symbol()[j:])
                     print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[j:]), brackets
@@ -114,21 +113,20 @@ class Compound:
         #Checks if first char in self.stat.symbol() is capitalized or is '('
         if self.stat.symbol()[0].isupper():
             i = j = 1
+            k = 0
         elif self.stat.symbol()[0] == '(':
-            i = j = 0
+            i = j = k = 0
         else: 
             print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol()[0]
             exit(1)
         brackets[0] = 1
         
-        while i <= len(self.stat.symbol()):
+        while i <= len(self.stat.symbol()) and j <= len(self.stat.symbol()):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets  
-            if self.stat.symbol()[i] == '(' and i == 0:
-                j += 1
-                continue
-                
-            elif self.stat.symbol()[i].isupper() or self.stat.symbol()[i] == '(' and (i > 0): #P4
-                
+            if self.stat.symbol()[i].isupper() and (len(self.inside) == 0):
+                k = 1
+
+            elif self.stat.symbol()[i].isupper() and (k != 0): #P4
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol()[j:i],
@@ -136,21 +134,23 @@ class Compound:
                 j = i
                 print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol()[j:], self.stat.symbol()[:i]
 
-            elif self.stat.symbol()[i] == ')':  #P1
-                print 'Compound<analyze>while1;try;if3;else;start (i, j, brackets)', i, j, brackets
+            elif self.stat.symbol()[i] in ['(', ')']:  #P1
+                print 'Compound<analyze>while1;if3;start (i, j, brackets)', i, j, brackets
                 self.inside.append(
                     Element(
                         self.stat.symbol()[j:i],
                         self.stat.amount() * brackets[brackets[0]][2] ) )
                 
-                j =  i + 1
-                i += len( str( self.bracketAmount(brackets, i, j)))
-                brackets[0] += 1
+                j = i
+                
+                if self.stat.symbol()[i] == ')':
+                    i += len( str( self.bracketAmount(brackets, i, j)))
+                    brackets[0] += 1
             
             i += 1
 
         else:
-            print 'Compound<analyze>while1;except<IndexError>;start'
+            print 'Compound<analyze>while1;except<IndexError>;start (i, j)', i, j
             self.inside.append(
                 Element(
                     self.stat.symbol()[j:],
