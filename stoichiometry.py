@@ -113,20 +113,25 @@ class Compound:
         #Checks if first char in self.stat.symbol() is capitalized or is '('
         if self.stat.symbol()[0].isupper():
             i = j = 1
-            k = 0
         elif self.stat.symbol()[0] == '(':
-            i = j = k = 0
+            i = j = 0
         else: 
             print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol()[0]
             exit(1)
         brackets[0] = 1
+        skip = 1
         
         while i <= len(self.stat.symbol()) and j <= len(self.stat.symbol()):
-            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets  
-            if self.stat.symbol()[i].isupper() and (len(self.inside) == 0):
-                k = 1
+            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
+              
+            if self.stat.symbol()[i] == '(' and skip == 1:
+                j += 1
+                
+            elif self.stat.symbol()[i].isupper() and skip == 1:
+                j += 1
+                skip = None
 
-            elif self.stat.symbol()[i].isupper() and (k != 0): #P4
+            elif self.stat.symbol()[i].isupper(): #P4
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol()[j:i],
