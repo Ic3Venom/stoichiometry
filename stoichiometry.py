@@ -110,6 +110,7 @@ class Compound:
                     print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[j:]), brackets
                     break
 
+        print '  Completed Compound<analyze>for1 (brackets)', brackets
         #Checks if first char in self.stat.symbol() is capitalized or is '('
         if self.stat.symbol()[0].isupper():
             i = j = 1
@@ -128,10 +129,10 @@ class Compound:
                 j += 1
                 
             elif self.stat.symbol()[i].isupper() and skip == 1:
-                j += 1
                 skip = None
 
             elif self.stat.symbol()[i].isupper(): #P4
+                print 'Componud<analyze>while1;if3 (j, i, self.stat.symbol()[j:i])', j, i, self.stat.symbol()[j:i]
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol()[j:i],
@@ -146,10 +147,12 @@ class Compound:
                         self.stat.symbol()[j:i],
                         self.stat.amount() * brackets[brackets[0]][2] ) )
                 
-                j = i
+                j += 1
                 
                 if self.stat.symbol()[i] == ')':
-                    i += len( str( self.bracketAmount(brackets, i, j)))
+                    print 'INSIDE,', self.inside
+                    
+                    i += len(str(self.inside[-1].symbol()))
                     brackets[0] += 1
             
             i += 1
