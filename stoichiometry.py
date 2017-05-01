@@ -2,46 +2,40 @@ class Info:
     '''Holds information of Elements and Compounds'''
 
     def __init__(self):
-        #Real names (in order): symbol, mass, name, number, amount
-        self.data = ['', 0.0, '', 0, 0]
-
-    def change(self, dataTag, value):
-        if dataTag in [0, 'symbol']:
-            dataTag = 0
-        elif dataTag in [1, 'mass']:
-            dataTag = 1
-        elif dataTag in [2, 'name']:
-            dataTag = 2
-        elif dataTag in [3, 'number']:
-            dataTag = 3
-        elif dataTag in [4, 'amount']:
-            dataTag = 4
-        self.data[dataTag] = value
-
-    def symbol(self):
-        return self.data[0]
-    def mass(self):
-        return self.data[1]
-    def name(self):
-        return self.data[2]
-    def number(self):
-        return self.data[3]
-    def amount(self):
-        return self.data[4]
+        #names in order of file): symbol, mass, name, number, amount
+        
+        self.amount = 0
+        self.name   = ''
+        self.number = 0
+        self.mass   = 0.0
+        self.symbol = ''
 
 class Element:
     '''A class to hold element information'''
 
     def amount(self):
-        for i in range(len(self.stat.symbol()) ):
-            if not self.stat.symbol()[i].isalpha():
-                temp = int(self.stat.symbol()[i:])
-                self.stat.change('symbol', self.stat.symbol()[:i])
-                print '  Element<amount>for;if (self.stat.symbol()[:i], i, temp)', self.stat.symbol()[:i], i, temp
+        for i in range(len(self.stat.symbol)):
+            if not self.stat.symbol[i].isalpha():
+                temp = int(self.stat.symbol[i:])
+                self.stat.symbol = self.stat.symbol[:i]
+                print '  Element<amount>for;if (self.stat.symbol[:i], i, temp)', self.stat.symbol[:i], i, temp
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1
             return 1
-
+    def change(self, i, value):
+        print 'ELement<change> (range(5))', range(5)
+        
+        if i == 0:
+            self.stat.name = value
+        elif i == 1:
+            self.stat.symbol = value
+        elif i == 2:
+            self.stat.mass = value
+        elif i == 3:
+            self.stat.name = value
+        elif i == 4:
+            self.stat.number = value
+            
     def find(self): #Might revert back to single data return
         '''Finds element in table.bin, returns element mass'''
 
@@ -50,7 +44,7 @@ class Element:
 
                 if line.split()[0] == self.stat.symbol(): #line.split()[0] is symbol location
                     for term in range( len(line.split()) ):
-                        self.stat.change(term, type(self.stat.data[term])(line.split()[term]))
+                        self.change(term, type(self.stat.data[term])(line.split()[term]))
                         print '    Element<find>with;for;if;for (term, line.split()[term])', term, type(self.stat.data[term])(line.split()[term])
                     
                     break
@@ -63,11 +57,11 @@ class Element:
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
 
-        self.stat.change('symbol', symbol)
-        self.stat.change('amount', compoundAmount * self.amount())
+        self.stat.symbol = symbol
+        self.stat.amount = compoundAmount * self.amount()
 
         self.find()
-        self.stat.change('mass', self.stat.mass() * self.stat.amount())
+        self.stat.mass = self.stat.mass() * self.stat.amount()
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
@@ -86,13 +80,13 @@ class Compound:
         print 'Compound<analyze>start (self.stat.symbol())', self.stat.symbol()
         
         #For1: searches symbol for brackets, and if found, will put more information of them
-        for i in range(len(self.stat.symbol())):
+        for i in range(len(self.stat.symbol)):
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
 
-            if self.stat.symbol()[i] == '(':
+            if self.stat.symbol[i] == '(':
                 brackets.append([i, 0, 1])
 
-            elif self.stat.symbol()[i] == ')':
+            elif self.stat.symbol[i] == ')':
                 print 'Compound<analyze>for1;if2;start (i, self.stat.symbol()[i])', i, self.stat.symbol()[i]
                 
                 brackets[brackets[0]][1] = i
@@ -100,7 +94,7 @@ class Compound:
                     print 'Compound<analyze>for1;if2;for1;start (i, j, self.stat.symbol()[j])', i, j, self.stat.symbol()[j]
                     if self.stat.symbol()[j].isalpha():
                         print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j], brackets)', int(self.stat.symbol()[i+1:j-1])
-                        brackets[brackets[0]][2] = int(self.stat.symbol()[i+1:j-1])
+                        brackets[brackets[0]][2] = int(self.stat.symbol[i+1:j-1])
                         brackets[0] += 1
                         break
                     
@@ -112,9 +106,9 @@ class Compound:
 
         print '  Completed Compound<analyze>for1 (brackets)', brackets
         #Checks if first char in self.stat.symbol() is capitalized or is '('
-        if self.stat.symbol()[0].isupper():
+        if self.stat.symbol[0].isupper():
             i = j = 1
-        elif self.stat.symbol()[0] == '(':
+        elif self.stat.symbol[0] == '(':
             i = j = 0
         else: 
             print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol()[0]
@@ -122,21 +116,21 @@ class Compound:
         brackets[0] = 1
         skip = 1
         
-        while i <= len(self.stat.symbol()) and j <= len(self.stat.symbol()):
-            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol()[i], brackets
+        while i <= len(self.stat.symbol) and j <= len(self.stat.symbol):
+            print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol[i], brackets
               
-            if self.stat.symbol()[i] == '(' and skip == 1:
+            if self.stat.symbol[i] == '(' and skip == 1:
                 j += 1
                 
-            elif self.stat.symbol()[i].isupper() and skip == 1:
+            elif self.stat.symbol[i].isupper() and skip == 1:
                 skip = None
 
             elif self.stat.symbol()[i].isupper(): #P4
                 print 'Componud<analyze>while1;if3 (j, i, self.stat.symbol()[j:i])', j, i, self.stat.symbol()[j:i]
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
-                        self.stat.symbol()[j:i],
-                        self.stat.amount() * brackets[brackets[0]][2] ) )
+                        self.stat.symbol[j:i],
+                        self.stat.amount * brackets[brackets[0]][2] ) )
                 j = i
                 print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol()[j:], self.stat.symbol()[:i]
 
@@ -144,15 +138,15 @@ class Compound:
                 print 'Compound<analyze>while1;if3;start (i, j, brackets)', i, j, brackets
                 self.inside.append(
                     Element(
-                        self.stat.symbol()[j:i],
+                        self.stat.symbol[j:i],
                         self.stat.amount() * brackets[brackets[0]][2] ) )
                 
                 j += 1
                 
-                if self.stat.symbol()[i] == ')':
+                if self.stat.symbol[i] == ')':
                     print 'INSIDE,', self.inside
                     
-                    i += len(str(self.inside[-1].symbol()))
+                    i += len(str(self.inside[-1].symbol))
                     brackets[0] += 1
             
             i += 1
@@ -161,32 +155,33 @@ class Compound:
             print 'Compound<analyze>while1;except<IndexError>;start (i, j)', i, j
             self.inside.append(
                 Element(
-                    self.stat.symbol()[j:],
-                    self.stat.amount() ) )
+                    self.stat.symbol[j:],
+                    self.stat.amount ) )
 
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
-        if not self.stat.symbol()[0].isdigit():
+        if not self.stat.symbol[0].isdigit():
             return 1
 
-        for i in range( len( self.stat.symbol())):
-            if not self.stat.symbol()[i].isdigit():
-                temp = self.stat.symbol()[:i]
-                print 'Compound<coef>for;if (temp, self.stat.symbol())', temp, self.stat.symbol()
-                self.stat.change('symbol', self.stat.symbol()[i:])
+        for i in range( len( self.stat.symbol)):
+            if not self.stat.symbol[i].isdigit():
+                temp = self.stat.symbol[:i]
+                print 'Compound<coef>for;if (temp, self.stat.symbol())', temp, self.stat.symbol
+                self.stat.symbol = self.stat.symbol[i:]
                 return temp
 
     def mass(self):
         for i in self.inside:
-            self.stat.change('mass', self.stat.mass() + i.stat.mass())
+            self.stat.mass = self.stat.mass() + i.stat.mass()
 
     def __init__(self, symbol):
         self.stat = Info()
+        
         self.inside = []
         self.massInput = 0.0 #Will be used later
 
-        self.stat.change('symbol', symbol)
-        self.stat.change('amount', self.coef())
+        self.stat.symbol = symbol
+        self.stat.amount = self.coef()
 
         self.analyze()
         self.mass()
@@ -314,7 +309,7 @@ def main():
 if __name__ == '__main__':
     test = Compound( raw_input("Compound: ") ) #TODO: remove
     print test.stat.data
-
+    
     #main() *need to work on Compound.analyze() more before I can work on main()
 
     exit(0)
