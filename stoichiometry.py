@@ -31,7 +31,7 @@ class Element:
             self.stat.symbol = value
         elif i == 2:
             self.stat.mass = value
-        elif i == 3:
+        elif i == 3: 
             self.stat.name = value
         elif i == 4:
             self.stat.number = value
@@ -42,9 +42,9 @@ class Element:
         with open('table.bin', 'rb') as f:
             for line in f:
 
-                if line.split()[0] == self.stat.symbol(): #line.split()[0] is symbol location
+                if line.split()[0] == self.stat.symbol: #line.split[0] is symbol location
                     for term in range( len(line.split()) ):
-                        self.change(term, type(self.stat.data[term])(line.split()[term]))
+                        self.change(term, line.split()[term])
                         print '    Element<find>with;for;if;for (term, line.split()[term])', term, type(self.stat.data[term])(line.split()[term])
                     
                     break
@@ -58,10 +58,10 @@ class Element:
         self.stat = Info()
 
         self.stat.symbol = symbol
-        self.stat.amount = compoundAmount * self.amount()
+        self.stat.amount = compoundAmount * self.amount
 
         self.find()
-        self.stat.mass = self.stat.mass() * self.stat.amount()
+        self.stat.mass = self.stat.mass * self.stat.amount
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
@@ -77,41 +77,41 @@ class Compound:
         '''Determines interior elements and puts them in array(inside)'''
 
         brackets = [1] #Initially starts with the first index where bracket indices will be stored
-        print 'Compound<analyze>start (self.stat.symbol())', self.stat.symbol()
+        print 'Compound<analyze>start (self.stat.symbol)', self.stat.symbol
         
         #For1: searches symbol for brackets, and if found, will put more information of them
         for i in range(len(self.stat.symbol)):
-            print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol()[i], brackets
+            print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol[i], brackets
 
             if self.stat.symbol[i] == '(':
                 brackets.append([i, 0, 1])
 
             elif self.stat.symbol[i] == ')':
-                print 'Compound<analyze>for1;if2;start (i, self.stat.symbol()[i])', i, self.stat.symbol()[i]
+                print 'Compound<analyze>for1;if2;start (i, self.stat.symbol[i])', i, self.stat.symbol[i]
                 
                 brackets[brackets[0]][1] = i
-                for j in range( i, len(self.stat.symbol())):
-                    print 'Compound<analyze>for1;if2;for1;start (i, j, self.stat.symbol()[j])', i, j, self.stat.symbol()[j]
-                    if self.stat.symbol()[j].isalpha():
-                        print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol()[i:j], brackets)', int(self.stat.symbol()[i+1:j-1])
+                for j in range( i, len(self.stat.symbol)):
+                    print 'Compound<analyze>for1;if2;for1;start (i, j, self.stat.symbol()[j])', i, j, self.stat.symbol[j]
+                    if self.stat.symbol[j].isalpha():
+                        print '    Compound<analyze>for1;if2;for1;try;if1 int(self.stat.symbol[i:j], brackets)', int(self.stat.symbol[i+1:j-1])
                         brackets[brackets[0]][2] = int(self.stat.symbol[i+1:j-1])
                         brackets[0] += 1
                         break
                     
                 else:
-                    print '    Compound<analyze>for1;if2;for1;end int(self.stat.symbol()[i:j-1])', int(self.stat.symbol()[j:])
-                    brackets[brackets[0]][2] = int(self.stat.symbol()[j:])
-                    print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol()[i+1:j]), brackets):', int(self.stat.symbol()[j:]), brackets
+                    print '    Compound<analyze>for1;if2;for1;end int(self.stat.symbol[i:j-1])', int(self.stat.symbol[j:])
+                    brackets[brackets[0]][2] = int(self.stat.symbol[j:])
+                    print '    Completed Compound<analyze>(thu:for1;if1;for1;except;if2);end (int(self.stat.symbol[i+1:j]), brackets):', int(self.stat.symbol[j:]), brackets
                     break
 
         print '  Completed Compound<analyze>for1 (brackets)', brackets
-        #Checks if first char in self.stat.symbol() is capitalized or is '('
+        #Checks if first char in self.stat.symbol is capitalized or is '('
         if self.stat.symbol[0].isupper():
             i = j = 1
         elif self.stat.symbol[0] == '(':
             i = j = 0
         else: 
-            print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol()[0]
+            print 'Impossible character \'%s\'. Exiting program.' % self.stat.symbol[0]
             exit(1)
         brackets[0] = 1
         skip = 1
@@ -125,8 +125,8 @@ class Compound:
             elif self.stat.symbol[i].isupper() and skip == 1:
                 skip = None
 
-            elif self.stat.symbol()[i].isupper(): #P4
-                print 'Componud<analyze>while1;if3 (j, i, self.stat.symbol()[j:i])', j, i, self.stat.symbol()[j:i]
+            elif self.stat.symbol[i].isupper(): #P4
+                print 'Componud<analyze>while1;if3 (j, i, self.stat.symbol[j:i])', j, i, self.stat.symbol[j:i]
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol[j:i],
