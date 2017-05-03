@@ -45,12 +45,12 @@ class Element:
                 if line.split()[0] == self.stat.symbol: #line.split[0] is symbol location
                     for term in range( len(line.split()) ):
                         self.change(term, line.split()[term])
-                        print '    Element<find>with;for;if;for (term, line.split()[term])', term, type(self.stat.data[term])(line.split()[term])
+                        print '    Element<find>with;for;if;for (term, line.split()[term])', term, line.split()[term]
                     
                     break
 
             else:
-                print 'ERROR: unknown element \'%s\'. Exiting program' % self.stat.symbol()
+                print 'ERROR: unknown element \'%s\'. Exiting program' % self.stat.symbol
                 f.close()
                 exit(1)
 
@@ -58,7 +58,7 @@ class Element:
         self.stat = Info()
 
         self.stat.symbol = symbol
-        self.stat.amount = compoundAmount * self.amount
+        self.stat.amount = compoundAmount * self.stat.amount
 
         self.find()
         self.stat.mass = self.stat.mass * self.stat.amount
@@ -132,14 +132,14 @@ class Compound:
                         self.stat.symbol[j:i],
                         self.stat.amount * brackets[brackets[0]][2] ) )
                 j = i
-                print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol()[j:], self.stat.symbol()[:i]
+                print 'Compound<analyze>while1;if1 (j, i, self.stat.symbol[j:], self.stat.symbol[:i])', j, i, self.stat.symbol[j:], self.stat.symbol[:i]
 
-            elif self.stat.symbol()[i] in ['(', ')']:  #P1
+            elif self.stat.symbol[i] in ['(', ')']:  #P1
                 print 'Compound<analyze>while1;if3;start (i, j, brackets)', i, j, brackets
                 self.inside.append(
                     Element(
                         self.stat.symbol[j:i],
-                        self.stat.amount() * brackets[brackets[0]][2] ) )
+                        self.stat.amount * brackets[brackets[0]][2] ) )
                 
                 j += 1
                 
