@@ -56,16 +56,17 @@ class Element:
 
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
+        print 'Element<__init__>start (symbol, compoundAmount)', symbol, compoundAmount
 
         self.stat.symbol = symbol
-        self.stat.amount = compoundAmount * self.stat.amount
+        self.stat.amount = compoundAmount * self.amount()
 
         self.find()
         self.stat.mass = self.stat.mass * self.stat.amount
 
 class Compound:
     '''A class to hold compounds, which hold class(Element)'''
-    
+     
     def bracketAmount(self, brackets, i, j):
         for bracket in brackets[1:]:
             if bracket[0] < j and bracket[1] > i:
@@ -140,23 +141,23 @@ class Compound:
                     Element(
                         self.stat.symbol[j:i],
                         self.stat.amount * brackets[brackets[0]][2] ) )
-                
-                j += 1
+                j += len(str(self.stat.symbol[j:i]))
                 
                 if self.stat.symbol[i] == ')':
                     print 'INSIDE,', self.inside
                     
-                    i += len(str(self.inside[-1].symbol))
+                    i += len(str(self.inside[-1].stat.symbol))
                     brackets[0] += 1
             
             i += 1
 
         else:
             print 'Compound<analyze>while1;except<IndexError>;start (i, j)', i, j
-            self.inside.append(
-                Element(
-                    self.stat.symbol[j:],
-                    self.stat.amount ) )
+            if self.stat.symbol[j:].isalnum():                
+                self.inside.append(
+                    Element(
+                        self.stat.symbol[j:],
+                        self.stat.amount ) )
 
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
@@ -172,7 +173,7 @@ class Compound:
 
     def mass(self):
         for i in self.inside:
-            self.stat.mass = self.stat.mass() + i.stat.mass()
+            self.stat.mass = self.stat.mass + i.stat.mass #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
 
     def __init__(self, symbol):
         self.stat = Info()
