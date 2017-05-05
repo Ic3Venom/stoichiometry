@@ -173,7 +173,8 @@ class Compound:
 
     def mass(self):
         for i in self.inside:
-            self.stat.mass = self.stat.mass + i.stat.mass #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
+            print '(i.stat.mass, type(i.stat.mass))', i.stat.mass, type(i.stat.mass), i.stat.symbol, i.stat.amount
+            self.stat.mass += i.stat #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
 
     def __init__(self, symbol):
         self.stat = Info()
@@ -185,6 +186,7 @@ class Compound:
         self.stat.amount = self.coef()
 
         self.analyze()
+        print 'Everything: symbol, mass, name, number, amount', self.stat.symbol, self.stat.mass, self.stat.name, self.stat.number, self.stat.amount
         self.mass()
 
 def empirical():
