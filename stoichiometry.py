@@ -26,14 +26,12 @@ class Element:
         print 'ELement<change> (range(5))', range(5)
         
         if i == 0:
-            self.stat.name = value
-        elif i == 1:
             self.stat.symbol = value
-        elif i == 2:
+        elif i == 1:
             self.stat.mass = value
-        elif i == 3: 
+        elif i == 2:
             self.stat.name = value
-        elif i == 4:
+        elif i == 3: 
             self.stat.number = value
             
     def find(self): #Might revert back to single data return
