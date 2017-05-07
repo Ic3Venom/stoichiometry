@@ -141,9 +141,7 @@ class Compound:
                         self.stat.amount * brackets[brackets[0]][2] ) )
                 j += len(str(self.stat.symbol[j:i]))
                 
-                if self.stat.symbol[i] == ')':
-                    print 'INSIDE,', self.inside
-                    
+                if self.stat.symbol[i] == ')':                    
                     i += len(str(self.inside[-1].stat.symbol))
                     brackets[0] += 1
             
