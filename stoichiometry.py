@@ -1,12 +1,16 @@
 class Info:
     '''Holds information of Elements and Compounds'''
+    
+    #TODO: remove (debug)
+    def all(self):
+        print 'Info<all> (amount %r, name %r, number %r, mass %r, symbol %r)' % (self.amount, self.name, self.number, self.mass, self.symbol)
 
     def __init__(self):
         #names in order of file): symbol, mass, name, number, amount
         
         self.amount = 0
-        self.name   = ''
-        self.number = 0
+        self.name   = ''    #Only applies to Element class
+        self.number = 0     #Only applies to Element class
         self.mass   = 0.0
         self.symbol = ''
 
@@ -23,16 +27,15 @@ class Element:
         else:   #if self.stat.symbol has no amount attached, defaults to 1
             return 1
     def change(self, i, value):
-        print 'ELement<change> (range(5))', range(5)
-        
         if i == 0:
-            self.stat.symbol = value
+            self.stat.symbol = str(value)
         elif i == 1:
-            self.stat.mass = value
+            self.stat.mass   = float(value)
         elif i == 2:
-            self.stat.name = value
+            self.stat.name   = str(value)
         elif i == 3: 
-            self.stat.number = value
+            self.stat.number = int(value)
+    
             
     def find(self): #Might revert back to single data return
         '''Finds element in table.bin, returns element mass'''
@@ -115,7 +118,7 @@ class Compound:
         brackets[0] = 1
         skip = 1
         
-        while i <= len(self.stat.symbol) and j <= len(self.stat.symbol):
+        while i < len(self.stat.symbol) and j <= len(self.stat.symbol):
             print 'Compound<analyze>while1;start (j, i, currentChar, brackets):', j, i, self.stat.symbol[i], brackets
               
             if self.stat.symbol[i] == '(' and skip == 1:
@@ -170,7 +173,8 @@ class Compound:
     def mass(self):
         for i in self.inside:
             print '(i.stat.mass, type(i.stat.mass))', i.stat.mass, type(i.stat.mass), i.stat.symbol, i.stat.amount
-            self.stat.mass += i.stat #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
+            print 'BEFORE CRASH', i.stat.mass, type(i.stat.mass), type(self.stat.mass)
+            self.stat.mass += i.stat.mass #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
 
     def __init__(self, symbol):
         self.stat = Info()
@@ -307,7 +311,7 @@ def main():
 
 if __name__ == '__main__':
     test = Compound( raw_input("Compound: ") ) #TODO: remove
-    print test.stat.data
+    print test.stat.all()
     
     #main() *need to work on Compound.analyze() more before I can work on main()
 
