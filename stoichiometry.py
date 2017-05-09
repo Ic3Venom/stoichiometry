@@ -15,7 +15,7 @@ class Info:
         self.symbol = ''
 
 class Element:
-    '''A class to hold element information'''
+    '''A class to hold elements'''
 
     def amount(self):
         for i in range(len(self.stat.symbol)):
@@ -26,6 +26,7 @@ class Element:
                 return temp
         else:   #if self.stat.symbol has no amount attached, defaults to 1
             return 1
+        
     def change(self, i, value):
         if i == 0:
             self.stat.symbol = str(value)
@@ -35,8 +36,7 @@ class Element:
             self.stat.name   = str(value)
         elif i == 3: 
             self.stat.number = int(value)
-    
-            
+        
     def find(self): #Might revert back to single data return
         '''Finds element in table.bin, returns element mass'''
 
@@ -128,7 +128,7 @@ class Compound:
                 skip = None
 
             elif self.stat.symbol[i].isupper(): #P4
-                print 'Componud<analyze>while1;if3 (j, i, self.stat.symbol[j:i])', j, i, self.stat.symbol[j:i]
+                print 'Compound<analyze>while1;if3 (j, i, self.stat.symbol[j:i])', j, i, self.stat.symbol[j:i]
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol[j:i],
@@ -173,7 +173,6 @@ class Compound:
     def mass(self):
         for i in self.inside:
             print '(i.stat.mass, type(i.stat.mass))', i.stat.mass, type(i.stat.mass), i.stat.symbol, i.stat.amount
-            print 'BEFORE CRASH', i.stat.mass, type(i.stat.mass), type(self.stat.mass)
             self.stat.mass += i.stat.mass #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
 
     def __init__(self, symbol):
@@ -234,7 +233,7 @@ def limiting():
             print '\nWelcome to the stoichiometry.py help page!\n'
             print 'The expected input for this program is as follows:'
             print '\tR + R... -> P + P...'
-            print '* R: Reactants (any order, seperated by the syntax, \' + \'(space plus space)'
+            print '* R: Reactants (any order, sep  erated by the syntax, \' + \'(space plus space)'
             print '* ->: yields symbol, please put a space before and after it'
             print '* P: Products (any order, separated by the syntax, \' +  \'(space plus space)'
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
