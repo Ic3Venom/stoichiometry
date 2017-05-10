@@ -60,7 +60,8 @@ class Element:
         print 'Element<__init__>start (symbol, compoundAmount)', symbol, compoundAmount
 
         self.stat.symbol = symbol
-        self.stat.amount = compoundAmount * self.amount()
+        print 'type(self.amount)', type(self.amount())
+        self.stat.amount = int(compoundAmount) * self.amount()
 
         self.find()
         self.stat.mass = self.stat.mass * self.stat.amount
@@ -78,7 +79,7 @@ class Compound:
     def analyze(self):
         '''Determines interior elements and puts them in array(inside)'''
 
-        brackets = [1] #Initially starts with the first index where bracket indices will be stored
+        brackets = [1, [0,0,1]] #Index of first bracket info, first bracket info is dummy for symbols who don't have brackets
         print 'Compound<analyze>start (self.stat.symbol)', self.stat.symbol
         
         #For1: searches symbol for brackets, and if found, will put more information of them
@@ -86,6 +87,7 @@ class Compound:
             print 'Compound<analyze>for1;start (i, currentChar, brackets):', i, self.stat.symbol[i], brackets
 
             if self.stat.symbol[i] == '(':
+                i += 1 
                 brackets.append([i, 0, 1])
 
             elif self.stat.symbol[i] == ')':
@@ -109,7 +111,7 @@ class Compound:
         print '  Completed Compound<analyze>for1 (brackets)', brackets
         #Checks if first char in self.stat.symbol is capitalized or is '('
         if self.stat.symbol[0].isupper():
-            i = j = 1
+            i = j = 0
         elif self.stat.symbol[0] == '(':
             i = j = 0
         else: 
@@ -151,8 +153,8 @@ class Compound:
             i += 1
 
         else:
-            print 'Compound<analyze>while1;except<IndexError>;start (i, j)', i, j
             if self.stat.symbol[j:].isalnum():                
+                'Compound<analyze>while1;else<end>;if1 (i, j, self.stat.symbol[j:])', i, j, self.stat.symbol[j:]
                 self.inside.append(
                     Element(
                         self.stat.symbol[j:],
