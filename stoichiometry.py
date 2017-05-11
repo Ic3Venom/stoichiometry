@@ -159,6 +159,8 @@ class Compound:
                     Element(
                         self.stat.symbol[j:],
                         self.stat.amount ) )
+            else:
+                self.inside[-1].stat.amount = int(self.stat.symbol[j:])
 
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
@@ -174,7 +176,7 @@ class Compound:
 
     def mass(self):
         for i in self.inside:
-            print '(i.stat.mass, type(i.stat.mass))', i.stat.mass, type(i.stat.mass), i.stat.symbol, i.stat.amount
+            print '(i.stat.mass, type(i.stat.mass), i.stat.amount)', i.stat.mass, type(i.stat.mass), i.stat.symbol, i.stat.amount, i.stat.amount
             self.stat.mass += i.stat.mass #Symbol strings are corrupting i.stat.mass, got 'NitrogenNitrogen'
 
     def __init__(self, symbol):
