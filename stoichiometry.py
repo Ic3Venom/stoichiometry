@@ -16,16 +16,6 @@ class Info:
 
 class Element:
     '''A class to hold elements'''
-
-    def amount(self):
-        for i in range(len(self.stat.symbol)):
-            if not self.stat.symbol[i].isalpha():
-                temp = int(self.stat.symbol[i:])
-                self.stat.symbol = self.stat.symbol[:i]
-                print '  Element<amount>for;if (self.stat.symbol[:i], i, temp)', self.stat.symbol[:i], i, temp
-                return temp
-        else:   #if self.stat.symbol has no amount attached, defaults to 1
-            return 1
         
     def change(self, i, value):
         if i == 0:
@@ -55,13 +45,22 @@ class Element:
                 f.close()
                 exit(1)
 
+    def subscript(self):
+        for i in range(len(self.stat.symbol)):
+            if not self.stat.symbol[i].isalpha():
+                temp = int(self.stat.symbol[i:])
+                self.stat.symbol = self.stat.symbol[:i]
+                print '  Element<amount>for;if (self.stat.symbol[:i], i, temp)', self.stat.symbol[:i], i, temp
+                return temp
+        else:   #if self.stat.symbol has no amount attached, defaults to 1
+            return 1
+
     def __init__(self, symbol, compoundAmount):
         self.stat = Info()
         print 'Element<__init__>start (symbol, compoundAmount)', symbol, compoundAmount
 
         self.stat.symbol = symbol
-        print 'type(self.amount)', type(self.amount())
-        self.stat.amount = int(compoundAmount) * self.amount()
+        self.stat.amount = int(compoundAmount) * self.subscript()
 
         self.find()
         self.stat.mass = self.stat.mass * self.stat.amount
@@ -130,7 +129,9 @@ class Compound:
                 skip = None
 
             elif self.stat.symbol[i].isupper(): #P4
-                print 'Compound<analyze>while1;if3 (j, i, self.stat.symbol[j:i])', j, i, self.stat.symbol[j:i]
+                print 'Compound<analyze>while1;if3 (j, i)', j, i, 
+                print 'ELEMENT_ADD, self.stat.symbol[j:i]', self.stat.symbol[j:i]
+                
                 self.inside.append(         #CRASH OCCURS HERE ( when input = '(NH4)')
                     Element(
                         self.stat.symbol[j:i],
@@ -140,10 +141,13 @@ class Compound:
 
             elif self.stat.symbol[i] in ['(', ')']:  #P1
                 print 'Compound<analyze>while1;if3;start (i, j, brackets)', i, j, brackets
+                print 'ELEMENT_ADD: self.stat.symbol[j:i], self.stat.amount, brackets[brackets0][2]', self.stat.symbol[j:i], self.stat.amount, brackets[brackets[0]][2]
                 self.inside.append(
                     Element(
                         self.stat.symbol[j:i],
                         self.stat.amount * brackets[brackets[0]][2] ) )
+                
+                print 'Compound<analyze>while1;if3 (i, j, self.stat.symbol[i], self.stat.symbol[i:j])', i, j, self.stat.symbol[i], self.stat.symbol[i:j]
                 j += len(str(self.stat.symbol[j:i]))
                 
                 if self.stat.symbol[i] == ')':                    
@@ -153,14 +157,17 @@ class Compound:
             i += 1
 
         else:
+            print 'Compound<analyze>while1<end>;start (i, j)', i, j
             if self.stat.symbol[j:].isalnum():                
-                'Compound<analyze>while1;else<end>;if1 (i, j, self.stat.symbol[j:])', i, j, self.stat.symbol[j:]
+                'Compound<analyze>while1<end>;if1 (i, j, self.stat.symbol[j:])', i, j, self.stat.symbol[j:]
                 self.inside.append(
                     Element(
                         self.stat.symbol[j:],
                         self.stat.amount ) )
             else:
-                self.inside[-1].stat.amount = int(self.stat.symbol[j:])
+                #print 'Compound<analyze>while1<end>;else (self.stat.sybol[j:])', self.stat.symbol[j:]
+                #self.inside[-1].stat.amount = int(self.stat.symbol[j:])
+                pass
 
     def coef(self):
         #if Compound has no coefficient, amount defaults to 1
