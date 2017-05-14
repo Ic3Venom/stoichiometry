@@ -52,6 +52,7 @@ class Element:
                 self.stat.symbol = self.stat.symbol[:i]
                 print '  Element<amount>for;if (self.stat.symbol[:i], i, temp)', self.stat.symbol[:i], i, temp
                 return temp
+            
         else:   #if self.stat.symbol has no amount attached, defaults to 1
             return 1
 
@@ -207,13 +208,15 @@ def empirical():
         userInput = raw_input(">>> ")
 
         if userInput == 'help':
-            print '\nWelcome to the stoichiometry.py help page!'
-            print '* The expected input for this program is as follows:'
-            print '\tMASS SYMBOL, MASS SYMBOL, ...'
-            print '* Where \'MASS\' is AT MOST in the thousandths place.'
-            print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
+            print 'stoichiometry.py/emperical() help:'
+            print '  The expected input for this program is as follows:'
+            print '    MASS SYMBOL, MASS SYMBOL, ...'
+            print '  * Where \'MASS\' is AT MOST in the thousandths place.'
+            print '  Any bugs, issues, requests? Put them in the GitHub repo.\n'
+            
         elif userInput == 'quit':
             exit(0)
+        
         else:
             break
 
@@ -248,8 +251,10 @@ def limiting():
             print '* ->: yields symbol, please put a space before and after it'
             print '* P: Products (any order, separated by the syntax, \' +  \'(space plus space)'
             print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
+        
         elif userInput == 'quit':
             exit(0)
+        
         else:
             break
 
@@ -300,10 +305,10 @@ def main():
         userInput = raw_input(">>> ")
 
         if userInput.lower() == 'help':
-            print '\nWelcome to the stoichiometry.py help page!\n'
-            print 'For empirical/molecular formula, type \'empirical\' or \'molecular\''
-            print 'For limiting reactant solver, type \'limiting\''
-            print '\nAny bugs, issues, requests? Put them in the GitHub repo.\n'
+            print '\nstoichiometry.py help:'
+            print '  For empirical/molecular formula, type \'empirical\' or \'molecular\''
+            print '  For limiting reactant solver, type \'limiting\''
+            print '  Any bugs, issues, requests? Report them in the GitHub repo.\n'
 
         elif userInput.lower() == 'quit':
             exit(0)
@@ -317,12 +322,10 @@ def main():
             break
         
         else:
-            print 'Unknown value "%s".' % userInput
+            print 'Unrecognized command "%s".' % userInput
 
 if __name__ == '__main__':
-    test = Compound( raw_input("Compound: ") ) #TODO: remove
-    print test.stat.all()
     
-    #main() *need to work on Compound.analyze() more before I can work on main()
+    main()
 
     exit(0)
