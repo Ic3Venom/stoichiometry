@@ -18,7 +18,7 @@ class Element:
     '''A class to hold elements'''
         
     def change(self, i, value):
-        if i == 0:
+        if   i == 0:
             self.stat.symbol = str(value)
         elif i == 1:
             self.stat.mass   = float(value)
@@ -32,7 +32,6 @@ class Element:
 
         with open('table.bin', 'rb') as f:
             for line in f:
-
                 if line.split()[0] == self.stat.symbol: #line.split[0] is symbol location
                     for term in range( len(line.split()) ):
                         self.change(term, line.split()[term])
@@ -325,7 +324,6 @@ def main():
             print 'Unrecognized command "%s".' % userInput
 
 if __name__ == '__main__':
-    
     main()
 
     exit(0)
