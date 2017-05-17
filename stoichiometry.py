@@ -20,18 +20,11 @@ def empirical():
         else:
             break
 
-    #TODO: finish stuff!
     for i in userInput.split(','):
-        try:
-            storage.append(
-                (compounds.Compound(
-                    i.split()[0] ),
-                int( i.split()[1] )) )
-
-        except:
-            print 'Incorrect syntax in userInput. Exiting program.',
-            print 'If you believe this is wrong, report this in the GitHub repo.'
-            exit(0)
+        storage.append(
+            (compounds.Compound(
+                i.split()[0] ),
+            int( i.split()[1] )) )
 
 def limiting():
     reactants = [ ]
