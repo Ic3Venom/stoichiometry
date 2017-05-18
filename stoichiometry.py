@@ -25,6 +25,7 @@ def empirical():
             (compounds.Compound(
                 i.split()[0] ),
             int( i.split()[1] )) )
+    print 'emperical()end (storage)', storage
 
 def limiting():
     reactants = [ ]
@@ -79,7 +80,9 @@ def limiting():
 
             else:
                 reactants.append( compounds.Compound(i) )
-
+                
+    print 'limiting()Phase2;end (reactants, products)', reactants, products
+    
     #Phase 3: userInput of each compound's mass
     for i in reactants + products:
         print "Limiting for2;start (i)", i
@@ -115,7 +118,7 @@ def main():
             break
         
         else:
-            print 'Unrecognized command "%s".' % userInput
+            print 'Unrecognized command "%s". Try again.' % userInput
 
 if __name__ == '__main__':
     
