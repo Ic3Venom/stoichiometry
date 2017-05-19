@@ -1,7 +1,7 @@
 import compounds
 
 def empirical():
-    storage = [ ]
+    stored = [ ]
 
     while True:
         print 'Enter your list of percent amounts of elements (type \'help\' for help)'
@@ -21,11 +21,11 @@ def empirical():
             break
 
     for i in userInput.split(','):
-        storage.append(
+        stored.append(
             (compounds.Compound(
                 i.split()[0] ),
             int( i.split()[1] )) )
-    print 'emperical()end (storage)', storage
+    print 'emperical()end (stored)', stored
 
 def limiting():
     reactants = [ ]
@@ -54,7 +54,6 @@ def limiting():
 
     #Phase 2: read input and put compounds into list(reactants) or list(products)
     for i in userInput.split():
-
         if i == '->':
             if switch is True:
                 print 'Repeated syntax %s in userInput.' % i,
