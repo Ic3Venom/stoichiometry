@@ -88,7 +88,7 @@ def limiting():
         print 'How many grams of %s are in the reaction? (Type \'?\' if value is unknown' % i.stat.symbol
 
         if userInput == '?':
-            continue
+            i.massInput = None
 
         else:
             i.massInput = float( raw_input(">>>") ) #Would like to rename variable
